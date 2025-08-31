@@ -225,13 +225,13 @@ if [ -f '${SING_BOX_FILE}' ]; then
       | (.. | objects | select(has("external_ui")))
         |= (.external_ui = "ui")
       # 插入 DNS inbound 到顶层 inbounds 数组
-      | .inbounds += [{
-          "type": "dns",
-          "tag": "dns-in",
-          "listen": "0.0.0.0",
-          "listen_port": 53,
-          "detour": "dns_proxy"
-        }]
+      #| .inbounds += [{
+      #    "type": "dns",
+      #    "tag": "dns-in",
+      #    "listen": "0.0.0.0",
+      #    "listen_port": 53,
+      #    "detour": "dns_proxy"
+      #  }]
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
