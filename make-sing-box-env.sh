@@ -316,11 +316,15 @@ pf_nat_udp_tcp() {
 
   # 写入 anchor 规则
   cat <<469138946ba5fa_1 | sudo tee \$ANCHOR_FILE
-# NAT 出口伪装
-nat on \$IFACE from 192.168.255.0/24 to any -> (\$IFACE)
+# NAT 出口伪装，保证 Mac 自身流量出外网正常
+nat on \$IFACE from any to any -> (\$IFACE)
+
+# 跳过本机和局域网流量
+no rdr on \$IFACE proto {tcp udp} from any to 127.0.0.1
+no rdr on \$IFACE proto {tcp udp} from any to {192.168.0.0/16 10.0.0.0/8 172.16.0.0/12}
 
 # 全局转发到 sing-box TUN
-rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1
+rdr pass on \$IFACE proto {tcp udp} from any to any -> 198.18.0.1
 469138946ba5fa_1
 
   # 重载 PF 加载并启用 PF
