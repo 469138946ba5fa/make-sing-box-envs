@@ -280,7 +280,8 @@ echo "CIDR 位数: \$CIDR_BITS"
 echo "CIDR 网段: \$CIDR"
 MARKER="# inserted-by-nat-script"
 #NAT_RULE1='nat on en0 from 192.168.255.0/24 to any -> (en0)'
-NAT_RULE1="nat on \$IFACE from \$CIDR to any -> (\$IFACE) \$MARKER"
+#NAT_RULE1="nat on \$IFACE from \$CIDR to any -> (\$IFACE) \$MARKER"
+NAT_RULE1="nat on \$IFACE from any to any -> (\$IFACE) \$MARKER"
 #NAT_RULE2='rdr pass on en0 proto udp from any to any -> 198.18.0.1'
 NAT_RULE2="rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1 \$MARKER"
 PF_CONF="/etc/pf.conf"
