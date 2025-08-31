@@ -228,7 +228,7 @@ if [ -f '${SING_BOX_FILE}' ]; then
       | .inbounds += [{
           "type": "dns",
           "tag": "dns-in",
-          "listen": "192.168.255.253",
+          "listen": "0.0.0.0",
           "listen_port": 53,
           "detour": "dns_proxy"
         }]
