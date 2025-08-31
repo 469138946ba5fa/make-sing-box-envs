@@ -251,76 +251,93 @@ fi
 
 echo "配置已生成: ${SING_BOX_FILE}"
 
+# 配置 NAT 转发并做好标记方便删除
+pf_nat_udp_tcp() {
+  # 获取默认网卡和网段
+  # 获取默认网卡
+  IFACE=\$(route get default | awk '/interface: / {print \$2}')
+  # 获取 IP 地址
+  IP=\$(ipconfig getifaddr "\$IFACE")
+  # 获取十六进制子网掩码
+  NETMASK_HEX=\$(ifconfig "\$IFACE" | awk '/netmask/ {print \$4}' | sed 's/^0x//')
+  # 转换为十进制
+  NETMASK_DEC=\$((16#\$NETMASK_HEX))
+  # 计算 CIDR 位数
+  CIDR_BITS=\$(echo "obase=2; \$NETMASK_DEC" | bc | grep -o "1" | wc -l | tr -d '[:space:]')
+  # 构造 CIDR 网段
+  IFS=. read -r o1 o2 o3 o4 <<< "\$IP"
+  CIDR="\${o1}.\${o2}.\${o3}.0/\${CIDR_BITS}"
+  echo "网卡: \$IFACE"
+  echo "IP: \$IP"
+  echo "子网掩码: \$NETMASK_HEX"
+  echo "CIDR 位数: \$CIDR_BITS"
+  echo "CIDR 网段: \$CIDR"
+  MARKER="# inserted-by-nat-script"
+  #NAT_RULE='nat on en0 from 192.168.255.0/24 to any -> (en0)'
+  #NAT_RULE="nat on \$IFACE from \$CIDR to any -> (\$IFACE) \$MARKER"
+  #NAT_RULE="nat on \$IFACE from any to any -> (\$IFACE) \$MARKER"
+  NAT_RULE='nat-anchor "singbox/*" '\$MARKER
+  #RDR_RULE='rdr pass on en0 proto udp from any to any -> 198.18.0.1'
+  #RDR_RULE="rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1 \$MARKER"
+  RDR_RULE='rdr-anchor "singbox/*" '\$MARKER
+  ANCHOR_FILE="/etc/pf.anchors/singbox"
+  PF_CONF="/etc/pf.conf"
+
+  # 删除旧规则（带标记的）
+  sudo sed -i '' "/\$MARKER/d" "\$PF_CONF"
+  sudo rm -fv \$ANCHOR_FILE
+
+  # 插入 NAT 规则
+  # 检查 /etc/pf.conf 是否存在 nat-anchor
+  if grep -q "nat-anchor" "\$PF_CONF"; then
+      # 找到 anchor，使用原有方式插入
+      sudo sed -i '' "/nat-anchor/a\\\\
+  \$NAT_RULE
+  " "\$PF_CONF"
+  else
+      # 没找到 anchor，直接追加到文件末尾
+      #echo "\$NAT_RULE" | sudo tee -a "\$PF_CONF"
+      printf '%s\n' "\$NAT_RULE" | sudo tee -a "\$PF_CONF"
+
+  fi
+
+  # 插入 RDR 规则
+  # 检查 /etc/pf.conf 是否存在 rdr-anchor
+  if grep -q "rdr-anchor" "\$PF_CONF"; then
+      # 找到 anchor，使用原有方式插入
+      sudo sed -i '' "/rdr-anchor/a\\\\
+  \$RDR_RULE
+  " "\$PF_CONF"
+  else
+      # 没找到 anchor，直接追加到文件末尾
+      #echo "\$RDR_RULE" | sudo tee -a "\$PF_CONF"
+      printf '%s\n' "\$RDR_RULE" | sudo tee -a "\$PF_CONF"
+  fi
+
+  # 写入 anchor 规则
+  cat <<469138946ba5fa_1 | sudo tee \$ANCHOR_FILE
+# NAT 出口伪装
+nat on \$IFACE from 192.168.255.0/24 to any -> (\$IFACE)
+
+# 全局转发到 sing-box TUN
+rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1
+469138946ba5fa_1
+
+  # 重载 PF 加载并启用 PF
+  sudo pfctl -d 2>/dev/null || true
+  sudo pfctl -f "\$PF_CONF" || true
+  sudo pfctl -e || true
+  sudo pfctl -s nat
+}
+
+pf_nat_udp_tcp
+
 # 开启 IP 转发避免反复写入
 NAT_IP='net.inet.ip.forwarding=1'
 SYS_CONF='/etc/sysctl.conf'
 if ! grep -qF "\$NAT_IP" "\$SYS_CONF"; then
   echo "\$NAT_IP" | sudo tee -a "\$SYS_CONF"
 fi
-
-# 配置 NAT 转发并做好标记方便删除
-# 获取默认网卡和网段
-# 获取默认网卡
-IFACE=\$(route get default | awk '/interface: / {print \$2}')
-# 获取 IP 地址
-IP=\$(ipconfig getifaddr "\$IFACE")
-# 获取十六进制子网掩码
-NETMASK_HEX=\$(ifconfig "\$IFACE" | awk '/netmask/ {print \$4}' | sed 's/^0x//')
-# 转换为十进制
-NETMASK_DEC=\$((16#\$NETMASK_HEX))
-# 计算 CIDR 位数
-CIDR_BITS=\$(echo "obase=2; \$NETMASK_DEC" | bc | grep -o "1" | wc -l | tr -d '[:space:]')
-# 构造 CIDR 网段
-IFS=. read -r o1 o2 o3 o4 <<< "\$IP"
-CIDR="\${o1}.\${o2}.\${o3}.0/\${CIDR_BITS}"
-echo "网卡: \$IFACE"
-echo "IP: \$IP"
-echo "子网掩码: \$NETMASK_HEX"
-echo "CIDR 位数: \$CIDR_BITS"
-echo "CIDR 网段: \$CIDR"
-MARKER="# inserted-by-nat-script"
-#NAT_RULE1='nat on en0 from 192.168.255.0/24 to any -> (en0)'
-#NAT_RULE1="nat on \$IFACE from \$CIDR to any -> (\$IFACE) \$MARKER"
-NAT_RULE1="nat on \$IFACE from any to any -> (\$IFACE) \$MARKER"
-#NAT_RULE2='rdr pass on en0 proto udp from any to any -> 198.18.0.1'
-NAT_RULE2="rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1 \$MARKER"
-PF_CONF="/etc/pf.conf"
-
-# 删除旧规则（带标记的）
-sudo sed -i '' "/\$MARKER/d" "\$PF_CONF"
-
-# 插入 NAT 规则
-# 检查 /etc/pf.conf 是否存在 nat-anchor
-if grep -q "nat-anchor" "\$PF_CONF"; then
-    # 找到 anchor，使用原有方式插入
-    sudo sed -i '' "/nat-anchor/a\\\\
-\$NAT_RULE1
-" "\$PF_CONF"
-else
-    # 没找到 anchor，直接追加到文件末尾
-    #echo "\$NAT_RULE1" | sudo tee -a "\$PF_CONF"
-    printf '%s\n' "\$NAT_RULE1" | sudo tee -a "\$PF_CONF"
-
-fi
-
-# 插入 RDR 规则
-# 检查 /etc/pf.conf 是否存在 rdr-anchor
-if grep -q "rdr-anchor" "\$PF_CONF"; then
-    # 找到 anchor，使用原有方式插入
-    sudo sed -i '' "/rdr-anchor/a\\\\
-\$NAT_RULE2
-" "\$PF_CONF"
-else
-    # 没找到 anchor，直接追加到文件末尾
-    #echo "\$NAT_RULE2" | sudo tee -a "\$PF_CONF"
-    printf '%s\n' "\$NAT_RULE2" | sudo tee -a "\$PF_CONF"
-fi
-
-# 重载 PF 加载并启用 PF
-sudo pfctl -d 2>/dev/null || true
-sudo pfctl -f "\$PF_CONF" || true
-sudo pfctl -e || true
-sudo pfctl -s nat
 
 # 关闭则 sudo sysctl -w net.inet.ip.forwarding=0
 sudo sysctl -w net.inet.ip.forwarding=1
