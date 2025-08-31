@@ -1,2 +1,193 @@
 # make-sing-box-envs
 Sing-Box 一键搭建配置脚本（macOS arm64）
+
+![Watchers](https://img.shields.io/github/watchers/469138946ba5fa/make-sing-box-envs) ![Stars](https://img.shields.io/github/stars/469138946ba5fa/make-sing-box-envs) ![Forks](https://img.shields.io/github/forks/469138946ba5fa/make-sing-box-envs) ![Vistors](https://visitor-badge.laobi.icu/badge?page_id=469138946ba5fa.make-sing-box-envs) ![LICENSE](https://img.shields.io/badge/license-CC%20BY--SA%204.0-green.svg)
+<a href="https://star-history.com/#469138946ba5fa/make-sing-box-envs&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=469138946ba5fa/make-sing-box-envs&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=469138946ba5fa/make-sing-box-envs&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=469138946ba5fa/make-sing-box-envs&type=Date" />
+  </picture>
+</a>
+
+本脚本用于在 **macOS** 系统上自动化完成以下任务：
+
+* 注意本脚本不会自动安装 python 环境，每个人的系统都很复杂，请自行安装挑选 python 环境
+* 安装依赖工具（如 `brew`, `ggrep`, `unar` 等）
+* 下载并配置 [sing-box](https://github.com/SagerNet/sing-box) 内核
+* 在线订阅转换并生成 Clash 兼容的配置文件
+* 配置本地 UI、Geo 数据文件
+* 自动生成并启动本地代理服务
+* 提供可执行启动脚本 `sing-box-start.sh`
+
+---
+
+## ⚠️ 注意事项
+* 😑关于先有鸡还是先有蛋的问题，说来可笑想搭建代理环境，必须要有代理环境，哎，太可笑了，太可悲了，哎
+  * 本脚本会安装 brew ggrep 和 unar 工具，这需要代理环境，请配置临时代理环境执行本脚本直到结束，哎
+* 本脚本依赖 python 环境请自行好提前准备好，本脚本会生成 python 脚本，用于解析json，为支持tls的节点插入 tls.insecure="true"  
+* 如需**全局路由**，请将路由器 DHCP 下发网关设置为本机 IP 同时设置下发 DNS 为 198.18.0.1
+* 如需**旁路由**，请将路由器或设备网关设置为本机 IP 同时设置 DNS 为 198.18.0.1
+* 如需**端口代理**，请将联网代理设置为本机 IP:7890
+* 若出现网络策略未生效，请检查系统是否允许 `utun` 接口访问网络
+* 为启用系统级转发，会尝试设置 `net.inet.ip.forwarding=1`，需要管理员权限
+* 本脚本会自己检测桌面是否包含 $HOME/Desktop/sing-boxs 目录，如果存在则会自动拼接 uuid 作为新目录在桌面创建
+  * 例如 $HOME/Desktop/sing-boxs-19AF2BFC-8B73-4678-992C-01BE6045C635
+
+## 💻 支持平台
+
+* 支持 **macOS**
+* 额支持 ARM 架构
+
+---
+
+## 🚀 使用方法(假设默认创建的是 $HOME/Desktop/sing-boxs 目录)
+
+1. 打开终端下载脚本，例如：
+
+   ```bash
+   cd $HOME/Desktop
+   curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o 'make-sing-box-env.sh' 'https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/make-sing-box-env.sh'
+   ```
+
+2. 给脚本授权并执行：
+
+   ```bash
+   chmod +x ./make-sing-box-env.sh
+   ./make-sing-box-env.sh
+   ```
+
+3. 根据提示输入以下内容（可回车使用默认值）：
+
+   * 订阅链接（可自定义或使用默认）
+   * 规则策略模板链接
+   * 在线订阅转换 API 链接
+
+4. 安装完成后，将生成配置文件与可执行二进制：
+
+   ```plaintext
+   $HOME/Desktop/sing-boxs
+   ├── config.json
+   ├── config.json.bak
+   ├── sing-box
+   ├── sing-box_config
+   │   ├── cache.db
+   │   ├── geoip.db
+   │   ├── geosite.db
+   │   ├── ui
+   │   └── ui.zip
+   ├── sing-box-1.10.0-darwin-arm64.tar.gz
+   ├── sing-box-start.sh
+   ├── subs-fix.py
+   └── temp_config.json
+   ```
+
+5. 按照脚本提示启动 Sing-Box tun 代理：
+
+   ```bash
+   # 订阅链接下载处理等会固化在 sing-box-start.sh 脚本中，此后想用就直接执行这个脚本即可
+   $HOME/Desktop/sing-boxs/sing-box-start.sh
+   ```
+
+---
+
+## 📦 自动安装依赖
+
+本脚本将检查并自动安装以下依赖：
+
+* `Homebrew`（若未安装则自动安装）
+* `ggrep`（替代系统 grep，支持增强语法）
+* `unar`（用于解压 `.gz`, `.zip` 文件）
+
+---
+
+## 🧩 配置说明
+
+* 默认配置启用了 **TUN 模式** 和 **Fake-IP DNS 模拟**，适用于全局代理、旁路由和端口代理
+* 配置文件路径：`$HOME/Desktop/sing-boxs/config.yaml`
+* Web UI 端口：`http://localhost:9999/ui/`
+* 默认监听端口：
+  * external-controller: 9999
+  * http/socks5 代理：7890
+
+---
+
+## 🔧 自定义订阅转换
+
+本脚本支持通过在线 API 将原始订阅链接转换为 Sing-Box 格式。
+
+默认 API 为：
+
+```
+https://sub.d1.mk/sub
+```
+
+可自行替换为其他 Sing-Box 订阅转换服务，只需支持如下参数结构：
+
+```
+?target=singbox&insert=true&url=<订阅链接>&config=<规则模板链接>
+```
+
+---
+
+## ❓ 常见问题
+
+**Q: 为什么 brew 安装失败？**  
+A: 说来有些可笑，你可能需要为了搭建代理环境而不得不临时使用代理完成这个流程，属实是有些`先有鸡还是先有蛋`了，如果你有能力确实可以修改优化这个脚本，比如将全部链接换成国内网路支持的版本，这样就能完成整套流程了。
+
+
+**Q: 为什么 curl 命令在脚本中不生效？**  
+A: 可能是 `$SUB_URL` 未被正确 URL 编码，脚本已内置编码函数 `urlencode()`。若有问题请手动检查 `${TMP_FILE}` 是否为空。
+
+
+**Q: 配置文件为空或不完整？**  
+A: 检查你输入的订阅链接和规则模板链接是否能通过浏览器访问。
+
+---
+
+## 🧼 卸载（可选）
+
+若要清理所有文件：
+
+```bash
+# 1.1 从 /etc/sysctl.conf 移除 net.inet.ip.forwarding=1 行
+if grep -q '^net.inet.ip.forwarding=1' /etc/sysctl.conf 2>/dev/null; then
+  echo "移除 /etc/sysctl.conf 中的 IP 转发配置..."
+  sudo sed -i '' '/^net\.inet\.ip\.forwarding=1$/d' /etc/sysctl.conf
+fi
+
+# 1.2 从 /etc/pf.conf 移除 "# inserted-by-nat-script" 标记行
+# 删除旧规则（带标记的）
+sudo sed -i '' "/# inserted-by-nat-script/d" /etc/pf.conf
+# 重新加载 PF
+sudo pfctl -f /etc/pf.conf
+sudo pfctl -e
+
+# 2. 实时禁用 IP 转发
+echo "禁用 IP 转发..."
+sudo sysctl -w net.inet.ip.forwarding=0
+
+# 3. 终止 sing-box 进程
+echo "终止 Sing-Box 进程（如有）..."
+sudo pkill -f 'sing-box -D' || echo "未找到 Sing-Box 进程，跳过。"
+
+# 4. 删除整个代理目录
+rm -rf $HOME/Desktop/sing-box*
+```
+## 许可证
+本项目采用 [MIT License](LICENSE) 许可。
+
+## 联系与反馈
+遇到问题或有改进建议，请在 [issues](https://github.com/469138946ba5fa/make-sing-box-envs/issues) 中提出，或直接联系项目维护者。
+
+## 参考
+[github/Homebrew install](https://github.com/Homebrew/install)  
+[github/juewuy ShellCrash](https://github.com/juewuy/ShellCrash)  
+[在线订阅转换 sub.d1.mk](https://sub.d1.mk/sub)  
+[github/SagerNet sing-box](https://github.com/SagerNet/sing-box)  
+[github/Zephyruso zashboard](https://github.com/Zephyruso/zashboard)  
+[github/SagerNet geoip.db](https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db)  
+[github/SagerNet geosite.db](https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db)  
+
+## 声明
+本项目仅作学习交流使用，学习各种姿势，不做任何违法行为。仅供交流学习使用，出现违法问题我负责不了，我也没能力负责，我没工作，也没收入，年纪也大了，就算灭了我也没用，我也没能力负责。
