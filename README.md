@@ -165,7 +165,9 @@ fi
 # 1.2 从 /etc/pf.conf 移除 "# inserted-by-nat-script" 标记行
 # 删除旧规则（带标记的）
 sudo sed -i '' "/# inserted-by-nat-script/d" /etc/pf.conf
+sudo rm -fv /etc/pf.anchors/singbox
 # 重新加载 PF
+sudo pfctl -d
 sudo pfctl -f /etc/pf.conf
 sudo pfctl -e
 
