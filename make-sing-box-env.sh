@@ -292,8 +292,8 @@ pf_nat_udp_tcp() {
   if grep -q "nat-anchor" "\$PF_CONF"; then
       # 找到 anchor，使用原有方式插入
       sudo sed -i '' "/nat-anchor/a\\\\
-  \$NAT_RULE
-  " "\$PF_CONF"
+\$NAT_RULE
+" "\$PF_CONF"
   else
       # 没找到 anchor，直接追加到文件末尾
       #echo "\$NAT_RULE" | sudo tee -a "\$PF_CONF"
@@ -306,8 +306,8 @@ pf_nat_udp_tcp() {
   if grep -q "rdr-anchor" "\$PF_CONF"; then
       # 找到 anchor，使用原有方式插入
       sudo sed -i '' "/rdr-anchor/a\\\\
-  \$RDR_RULE
-  " "\$PF_CONF"
+\$RDR_RULE
+" "\$PF_CONF"
   else
       # 没找到 anchor，直接追加到文件末尾
       #echo "\$RDR_RULE" | sudo tee -a "\$PF_CONF"
