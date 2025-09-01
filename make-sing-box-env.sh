@@ -66,9 +66,9 @@ fi
 
 # 订阅链接
 echo "请输入你的订阅链接SUBS，不输入直接回车则使用默认但不保证节点有效:"
-echo "默认 'https://panlongid.com/wp-content/uploads/nodelist/202508/20250831-base64-3Jgp35.txt' "
+echo "默认 'https://panlongid.com/wp-content/uploads/nodelist/202508/20250901-base64-dmN9su.txt' "
 read -r -s SUBS
-SUBS=${SUBS:-'https://panlongid.com/wp-content/uploads/nodelist/202508/20250831-base64-3Jgp35.txt'}
+SUBS=${SUBS:-'https://panlongid.com/wp-content/uploads/nodelist/202508/20250901-base64-dmN9su.txt'}
 urlencode() {
   local LANG=C
   local length="${#1}"
