@@ -145,9 +145,17 @@ A: 这涉及到一个非常经典的问题，我的配置文件用的 `fake-ip` 
 如果证书未被信任、缺失、SAN 不匹配，就会触发 ssl_cert 或 certificate_verify_failed 报错。  
 7890 走的是 HTTP 代理协议（即使访问的是 HTTPS），浏览器先发一个 CONNECT 请求到代理，代理只是转发 TLS 流量，不解密，所以不需要伪造证书。  
 
-
 **Q: 配置文件为空或不完整？**  
 A: 检查你输入的订阅链接和规则模板链接是否能通过浏览器访问。
+
+**Q: 你的测试节点哪里来的？这个问题就不要在私信我了哦。**  
+A: 动动你的小手，打开浏览器，打开搜索框输入关键词有且不限于以下信息，按回车，你大概率能搜索到  
+  `site: baidu.com 20250901 singbox base64 免费节点`,   
+  `site: google.com 20250901 singbox base64 免费节点`,   
+  `site: bing.com 20250901 singbox base64 免费节点`,   
+  `site: duckduckgo.com 20250901 singbox base64 免费节点`,   
+  `site: yahoo.com 20250901 singbox base64 免费节点`, ...   
+
 
 ---
 
@@ -196,6 +204,7 @@ rm -rf $HOME/Desktop/sing-box*
 [github/Zephyruso zashboard](https://github.com/Zephyruso/zashboard)  
 [github/SagerNet geoip.db](https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db)  
 [github/SagerNet geosite.db](https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db)  
+[www.panlongid.com freenodeshare](https://www.panlongid.com/category/freenodeshare)  
 
 ## 声明
 本项目仅作学习交流使用，学习各种姿势，不做任何违法行为。仅供交流学习使用，出现违法问题我负责不了，我也没能力负责，我没工作，也没收入，年纪也大了，就算灭了我也没用，我也没能力负责。
