@@ -277,8 +277,8 @@ pf_nat_udp_tcp() {
   #NAT_RULE="nat on \$IFACE from \$CIDR to any -> (\$IFACE) \$MARKER"
   #NAT_RULE="nat on \$IFACE from any to any -> (\$IFACE) \$MARKER"
   NAT_RULE='nat-anchor "singbox/*" '\$MARKER
-  #RDR_RULE='rdr pass on en0 proto udp from any to any -> 198.18.0.1'
-  #RDR_RULE="rdr pass on \$IFACE proto udp from any to any -> 198.18.0.1 \$MARKER"
+  #RDR_RULE='rdr pass on en0 proto udp from any to any -> 172.19.0.1'
+  #RDR_RULE="rdr pass on \$IFACE proto udp from any to any -> 172.19.0.1 \$MARKER"
   RDR_RULE='rdr-anchor "singbox/*" '\$MARKER
   ANCHOR_FILE="/etc/pf.anchors/singbox"
   PF_CONF="/etc/pf.conf"
@@ -324,7 +324,7 @@ no rdr on \$IFACE proto {tcp udp} from any to 127.0.0.1
 no rdr on \$IFACE proto {tcp udp} from any to {192.168.0.0/16 10.0.0.0/8 172.16.0.0/12}
 
 # 全局转发到 sing-box TUN
-rdr pass on \$IFACE proto {tcp udp} from any to any -> 198.18.0.1
+rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
 469138946ba5fa_1
 
   # 重载 PF 加载并启用 PF
@@ -358,8 +358,8 @@ IFS=\$IFS_BAK
 chmod -v a+x ${SING_BOX_START}
 echo "已生成启动脚本: ${SING_BOX_START}"
 
-echo "如果想要全局路由你需要配置路由器 DHCP 下发的 NetGateway 强制为本机 IP 同时将下发 DNS 强制修改为 198.18.0.1 后执行脚本"
-echo "如果想要旁路由，你需要为单个联网设备配置 NetGateway 强制为本机 IP 同时将下发 DNS 强制修改为 198.18.0.1 后执行脚本"
+echo "如果想要全局路由你需要配置路由器 DHCP 下发的 NetGateway 强制为本机 IP 同时将下发 DNS 强制修改为 172.19.0.1 后执行脚本"
+echo "如果想要旁路由，你需要为单个联网设备配置 NetGateway 强制为本机 IP 同时将下发 DNS 强制修改为 172.19.0.1 后执行脚本"
 echo "如果想要端口代理，你需要将联网代理设置为本机 IP:7890"
 echo "如果想要本机，那就什么都没什么可说的了"
 echo "执行脚本 ${SING_BOX_START} 启动测试看看吧"
