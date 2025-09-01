@@ -15,7 +15,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）
 * 注意本脚本不会自动安装 python 环境，每个人的系统都很复杂，请自行安装挑选 python 环境
 * 安装依赖工具（如 `brew`, `ggrep`, `unar` 等）
 * 下载并配置 [sing-box](https://github.com/SagerNet/sing-box) 内核
-* 在线订阅转换并生成 Clash 兼容的配置文件
+* 在线订阅转换并生成 Sing-Box 兼容的配置文件
 * 配置本地 UI、Geo 数据文件
 * 自动生成并启动本地代理服务
 * 提供可执行启动脚本 `sing-box-start.sh`
