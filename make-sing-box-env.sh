@@ -240,7 +240,7 @@ jq '[.outbounds[] | select(.server != null and .server != "")]' '$TMP_FILE' > '$
 [ ! -f "$NODES" ] && echo "全节点文件不存在：$NODES" && exit 1
 
 # 将节点全部插入到 `.outbounds`
-jq --argjson new_nodes "\$(cat '$NODES)'" '
+jq --argjson new_nodes "\$(cat '$NODES')" '
   .outbounds += \$new_nodes
 ' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 [ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
