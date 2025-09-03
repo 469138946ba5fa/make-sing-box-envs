@@ -322,8 +322,10 @@ nat on \$IFACE from any to any -> (\$IFACE)
 # DNS 劫持：所有设备的 DNS 请求转发到 TUN 网卡
 rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 
-# TCP/UDP 流量转发到 sing-box
-rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1 port 7890
+# TCP/UDP 流量转发到 sing-box 7890
+#rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1 port 7890
+# TCP/UDP 流量转发到 sing-box TUN
+rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
 469138946ba5fa_1
 
   # 重载 PF 加载并启用 PF
