@@ -317,7 +317,6 @@ if [ -f '${SING_BOX_FILE}' ]; then
 
     # 替换测试 URL 为更稳定的 Cloudflare
     # 修复 sing-box config.json 中自动选择策略的 url-test 设置
-    # 修复 sing-box config.json 中自动选择策略的 url-test 设置
     jq '
       (.. | objects | select(has("url")))
         |= (.url = "http://cp.cloudflare.com/generate_204")
