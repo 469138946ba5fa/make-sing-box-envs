@@ -96,7 +96,7 @@ SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&
 SING_BOX_BIN_FILE="$(echo ${SING_BOX_BIN_FILE_GZ} | sed 's;.tar.gz;;g')"
 SING_BOX_BIN_FILE_RENAME="${SING_BOX_DIR_PATH}/sing-box"
 SING_BOX_PATH='/SagerNet/sing-box/releases/download/v1.13.0-alpha.8'
-VERSION=sing-box-$(basename $(echo ${SING_BOX_PATH} | sed 's;-;/;g') | tr 'A-Z' 'a-z' | sed 's;v;;g')-darwin-arm64.tar.gz
+VERSION=sing-box-$(basename ${SING_BOX_PATH} | tr 'A-Z' 'a-z' | sed 's;v;;g')-darwin-arm64.tar.gz
 echo "https://github.com${SING_BOX_PATH}/${VERSION}"
 SING_BOX_BIN_FILE_URL="https://github.com${SING_BOX_PATH}/${VERSION}"
 SING_BOX_BIN_FILE_GZ="${SING_BOX_DIR_PATH}/${VERSION}"
