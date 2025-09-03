@@ -93,13 +93,13 @@ read -r SUBS_API
 SUBS_API=${SUBS_API:-'https://sub.d1.mk/sub'}
 #SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'&config='${RULES}
 SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}
-SING_BOX_BIN_FILE="$(echo ${SING_BOX_BIN_FILE_GZ} | sed 's;.tar.gz;;g')"
 SING_BOX_BIN_FILE_RENAME="${SING_BOX_DIR_PATH}/sing-box"
 SING_BOX_PATH='/SagerNet/sing-box/releases/download/v1.13.0-alpha.8'
 VERSION=sing-box-$(basename ${SING_BOX_PATH} | tr 'A-Z' 'a-z' | sed 's;v;;g')-darwin-arm64.tar.gz
 echo "https://github.com${SING_BOX_PATH}/${VERSION}"
 SING_BOX_BIN_FILE_URL="https://github.com${SING_BOX_PATH}/${VERSION}"
 SING_BOX_BIN_FILE_GZ="${SING_BOX_DIR_PATH}/${VERSION}"
+SING_BOX_BIN_FILE="$(echo ${SING_BOX_BIN_FILE_GZ} | sed 's;.tar.gz;;g')"
 UI_PATH=$(curl -SL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 -H "Connection: keep-alive" -k 'https://github.com/Zephyruso/zashboard/releases' | sed 's;";\n;g;s;tag;download;g' | grep '/download/' | head -n 1)
 UI_URL="https://github.com${UI_PATH}/dist.zip"
 UI_FILE=${SING_BOX_DIR}'/ui.zip'
