@@ -48,7 +48,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）
 
    ```bash
    cd $HOME/Desktop
-   curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o 'make-sing-box-env.sh' 'https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/make-sing-box-env.sh'
+   curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o 'make-sing-box-env.sh' 'https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/sing-box-1.10.0/make-sing-box-env.sh'
    ```
 
 2. 给脚本授权并执行：
