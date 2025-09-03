@@ -82,16 +82,17 @@ urlencode() {
 }
 SUBS=$(urlencode ${SUBS})
 # 规则策略模版
-echo "请输入你的规则策略模版链接RULES，不输入直接回车则使用默认但不保证模版有效:"
-echo "默认 'https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash_Full_Block.ini' "
-read -r RULES
-RULES=${RULES:-'https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash_Full_Block.ini'}
+#echo "请输入你的规则策略模版链接RULES，不输入直接回车则使用默认但不保证模版有效:"
+#echo "默认 'https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash_Full_Block.ini' "
+#read -r RULES
+#RULES=${RULES:-'https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash_Full_Block.ini'}
 # 在线订阅转换API接口
 echo "请输入你的在线订阅转换API链接SUBS_API，不输入直接回车则使用默认但不保证转换有效:"
 echo "默认 'https://sub.d1.mk/sub' "
 read -r SUBS_API
 SUBS_API=${SUBS_API:-'https://sub.d1.mk/sub'}
-SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'&config='${RULES}
+#SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'&config='${RULES}
+SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'
 SING_BOX_BIN_FILE_GZ="${SING_BOX_DIR_PATH}/sing-box-1.10.0-darwin-arm64.tar.gz"
 SING_BOX_BIN_FILE="$(echo ${SING_BOX_BIN_FILE_GZ} | sed 's;.tar.gz;;g')"
 SING_BOX_BIN_FILE_RENAME="${SING_BOX_DIR_PATH}/sing-box"
@@ -235,9 +236,7 @@ fi
 [ ! -f '${TMP_FILE}' ] && echo "原始节点文件不存在：${TMP_FILE}" && exit 1
 
 # 从订阅中提取节点
-jq '
-  [.outbounds[] | select(.server != null and .server != "")]
-' '$TMP_FILE' > '$NODES'
+jq '[.outbounds[] | select(.server != null and .server != "")]' '$TMP_FILE' > '$NODES'
 [ ! -f "$NODES" ] && echo "全节点文件不存在：$NODES" && exit 1
 
 # 将节点全部插入到 `.outbounds`
