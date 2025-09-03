@@ -92,7 +92,7 @@ echo "默认 'https://sub.d1.mk/sub' "
 read -r SUBS_API
 SUBS_API=${SUBS_API:-'https://sub.d1.mk/sub'}
 #SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'&config='${RULES}
-SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'
+SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}
 SING_BOX_BIN_FILE_GZ="${SING_BOX_DIR_PATH}/sing-box-1.10.0-darwin-arm64.tar.gz"
 SING_BOX_BIN_FILE="$(echo ${SING_BOX_BIN_FILE_GZ} | sed 's;.tar.gz;;g')"
 SING_BOX_BIN_FILE_RENAME="${SING_BOX_DIR_PATH}/sing-box"
