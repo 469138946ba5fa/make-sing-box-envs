@@ -102,15 +102,33 @@ SING_BOX_BIN_FILE_URL="https://github.com${SING_BOX_PATH}/sing-box-${VERSION}-da
 UI_PATH=$(curl -SL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 -H "Connection: keep-alive" -k 'https://github.com/Zephyruso/zashboard/releases' | sed 's;";\n;g;s;tag;download;g' | grep '/download/' | head -n 1)
 UI_URL="https://github.com${UI_PATH}/dist.zip"
 UI_FILE=${SING_BOX_DIR}'/ui.zip'
-GEOIP_URL='https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db'
-GEOIP_FILE=${SING_BOX_DIR}'/geoip.db'
-GEOSITE_URL='https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db'
-GEOSITE_FILE=${SING_BOX_DIR}'/geosite.db'
+GEOIP_URL='https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set/geoip-cn.srs'
+GEOIP_FILE=${SING_BOX_DIR}'/geoip-cn.srs'
+GEOSITE_LOCATION_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-geolocation-!cn.srs'
+GEOSITE_LOCATION_FILE=${SING_BOX_DIR}'/geosite-geolocation-!cn.srs'
+GEOSITE_CATEGORY_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ads-all.srs'
+GEOSITE_CATEGORY_FILE=${SING_BOX_DIR}'/geosite-category-ads-all.srs'
+SING_BOX_CONFIG_TEMPLATES_URL="https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/1.13.0-alpha.8.json"
+SING_BOX_CONFIG_TEMPLATES_FILE=${SING_BOX_DIR_PATH}'/1.13.0-alpha.8.json'
 TMP_FILE=${SING_BOX_DIR_PATH}'/temp_config.json'
 OUT_FILE=${SING_BOX_DIR_PATH}'/out_config.json'
 BASE_FILE=${SING_BOX_DIR_PATH}'/base_config.json'
 SING_BOX_FILE=${SING_BOX_DIR_PATH}'/config.json'
-
+NODES=${SING_BOX_DIR_PATH}'/filtered_nodes.json'
+NODES_CONFIG=${SING_BOX_DIR_PATH}'/config_with_nodes.json'
+GROUPS_PATTERNS=$(cat <<'469138946ba5fa'
+🇯🇵 日本节点|日本|JP|Tokyo|东京|大阪
+🇺🇲 美国节点|美|US|United States|洛杉矶|芝加哥|硅谷|圣何塞
+🇸🇬 新加坡节点|坡|SG|Singapore|狮城
+🇭🇰 香港节点|港|HK|Hong Kong
+🇨🇳 台湾节点|台|TW|Taiwan|彰化|新北
+🇰🇷 韩国节点|韩|KR|Korea|首尔
+🎮 游戏节点|游戏|Game|加速|Steam|Origin
+🎥 流媒体解锁|Netflix|奈飞|Media|NF|Disney|YouTube|流媒体
+📺 省流节点|省流|低倍率|大流量|0.1x|0.2x
+👍 高级节点|专线|高级|IEPL|IPLC|AIA|CTM|CC|Premium
+469138946ba5fa
+)
 BASE_SING_BOX_CONFIG_FIXSCRIPT=$(cat <<'469138946ba5fa'
 # 需要用 Python 或 JSON 专用工具转换
 #command -v python
@@ -151,15 +169,24 @@ with open(output_path, "w", encoding="utf-8") as f:
 print(f"修复完成，所有 outbounds 节点已确保包含 tls.insecure: true → {output_path}")
 469138946ba5fa
 )
+GROUPS_FILE=${SING_BOX_DIR_PATH}'/group_patterns.txt'
 BASE_CONFIG_FIXSCRIPT_FILE=${SING_BOX_DIR_PATH}'/subs-fix.py'
 SING_BOX_START=${SING_BOX_DIR_PATH}'/sing-box-start.sh'
 
 mkdir -pv ${SING_BOX_DIR}
 
 curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${SING_BOX_BIN_FILE_GZ} ${SING_BOX_BIN_FILE_URL}
+[ ! -f "$SING_BOX_BIN_FILE_GZ" ] && echo "sing-box压缩文件不存在：$SING_BOX_BIN_FILE_GZ" && exit 1
 curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${UI_FILE} ${UI_URL}
+[ ! -f "$UI_FILE" ] && echo "UI压缩文件不存在：$UI_FILE" && exit 1
 curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOIP_FILE} ${GEOIP_URL}
-curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOSITE_FILE} ${GEOSITE_URL}
+[ ! -f "$GEOIP_FILE" ] && echo "GEOIP文件不存在：$GEOIP_FILE" && exit 1
+curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOSITE_LOCATION_FILE} ${GEOSITE_LOCATION_URL}
+[ ! -f "$GEOSITE_LOCATION_FILE" ] && echo "GEOSITE LOCATION文件不存在：$GEOSITE_LOCATION_FILE" && exit 1
+curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOSITE_CATEGORY_FILE} ${GEOSITE_CATEGORY_URL}
+[ ! -f "$GEOSITE_CATEGORY_FILE" ] && echo "GEOSITE CATEGORY文件不存在：$GEOSITE_CATEGORY_FILE" && exit 1
+curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${SING_BOX_CONFIG_TEMPLATES_FILE} ${SING_BOX_CONFIG_TEMPLATES_URL}
+[ ! -f "$SING_BOX_CONFIG_TEMPLATES_FILE" ] && echo "模板配置文件不存在：$SING_BOX_CONFIG_TEMPLATES_FILE" && exit 1
 
 unar -f ${SING_BOX_BIN_FILE_GZ} -o ${SING_BOX_DIR_PATH}
 mv -fv ${SING_BOX_BIN_FILE}/sing-box ${SING_BOX_BIN_FILE_RENAME}
@@ -172,7 +199,10 @@ unzip -o ${SING_BOX_DIR}'/ui.zip' -d ${SING_BOX_DIR}
 mv -fv ${SING_BOX_DIR}/dist ${SING_BOX_DIR}/ui
 
 # 合并自定义头部 + 提取部分
+echo "${GROUPS_PATTERNS}" > "${GROUPS_FILE}"
+[ ! -f "$GROUPS_FILE" ] && echo "分组定义文件不存在：$GROUPS_FILE" && exit 1
 echo "${BASE_SING_BOX_CONFIG_FIXSCRIPT}" > "${BASE_CONFIG_FIXSCRIPT_FILE}"
+[ ! -f "$BASE_CONFIG_FIXSCRIPT_FILE" ] && echo "修复脚本文件不存在：$BASE_CONFIG_FIXSCRIPT_FILE" && exit 1
 
 chmod -Rv a+x ${SING_BOX_DIR_PATH}
 chown -Rv $USER ${SING_BOX_DIR_PATH}
@@ -202,7 +232,85 @@ else
     exit 2
 fi
 
-cp -fv '${TMP_FILE}' '${SING_BOX_FILE}'
+[ ! -f '${TMP_FILE}' ] && echo "原始节点文件不存在：${TMP_FILE}" && exit 1
+
+# 从订阅中提取节点
+jq '
+  [.outbounds[] | select(.server != null and .server != "")]
+' '$TMP_FILE' > '$NODES'
+[ ! -f "$NODES" ] && echo "全节点文件不存在：$NODES" && exit 1
+
+# 将节点全部插入到 `.outbounds`
+jq --argjson new_nodes "\$(cat '$NODES)'" '
+  .outbounds += \$new_nodes
+' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+[ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
+
+# 将节点名全部插入到 `♻️ 自动选择`
+jq --argjson new_nodes "\$(cat '$NODES')" '
+  .outbounds |= map(
+    if .tag == "♻️ 自动选择" and .type == "urltest" then
+      .outbounds = (\$new_nodes | map(.tag))
+    else
+      .
+    end
+  )
+' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+
+# 将节点名全部插入到 `🚀 手动切换`
+jq --argjson new_nodes "\$(cat '$NODES')" '
+  .outbounds |= map(
+    if .tag == "🚀 手动切换" and .type == "selector" then
+      .outbounds = (\$new_nodes | map(.tag))
+    else
+      .
+    end
+  )
+' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+
+# 遍历分组定义文件，每行格式：tag|pattern
+while IFS='|' read -r tag pattern; do
+  echo "处理分组：\$tag"
+
+  # 获取匹配到的节点 tag 列表
+  matched=\$(jq --arg pattern "\$pattern" '
+    [.[] | select(.tag | test(\$pattern; "i")) | .tag]
+  ' '$NODES')
+
+  # 如果没有匹配结果，跳过
+  if [ "\$(echo "\$matched" | jq 'length')" -eq 0 ]; then
+    echo "  ➤ 无匹配节点，跳过"
+    continue
+  fi
+
+  # 判断分组是否存在
+  exists=\$(jq --arg tag "\$tag" '.outbounds[] | select(.tag == \$tag)' '$NODES_CONFIG')
+
+  if [ -z "\$exists" ]; then
+    echo "  ➤ 分组不存在，创建新 selector"
+    jq --arg tag "\$tag" --argjson outbounds "\$matched" '
+      .outbounds += [{
+        type: "selector",
+        tag: \$tag,
+        outbounds: \$outbounds
+      }]
+    ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+  else
+    echo "  ➤ 分组已存在，更新节点列表"
+    jq --arg tag "\$tag" --argjson outbounds "\$matched" '
+      .outbounds |= map(
+        if .tag == \$tag and (.type == "selector" or .type == "urltest") then
+          . + {outbounds: \$outbounds}
+        else
+          .
+        end
+      )
+    ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
+  fi
+done < '$GROUPS_FILE'
+
+cp -fv '${NODES_CONFIG}' '${SING_BOX_FILE}'
+[ ! -f "$SING_BOX_FILE" ] && echo "新节点配置文件不存在：$SING_BOX_FILE" && exit 1
 
 # 修复 sing-box config.json 中自动选择策略的 url-test 设置
 if [ -f '${SING_BOX_FILE}' ]; then
@@ -349,6 +457,7 @@ sudo sysctl -w net.inet.ip.forwarding=1
 sudo dscacheutil -flushcache
 sudo killall -HUP mDNSResponder
 
+sudo '${SING_BOX_BIN_FILE_RENAME}' -c '${SING_BOX_FILE}' format > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 sudo pkill -f 'sing-box -D' || true
 sudo '${SING_BOX_BIN_FILE_RENAME}' -D '${SING_BOX_DIR}' -c '${SING_BOX_FILE}' run
 IFS=\$IFS_BAK
