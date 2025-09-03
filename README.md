@@ -68,19 +68,24 @@ Sing-Box 一键搭建配置脚本（macOS arm64）
 
    ```plaintext
    $HOME/Desktop/sing-boxs
-   ├── config.json
-   ├── config.json.bak
-   ├── sing-box
-   ├── sing-box_config
-   │   ├── cache.db
-   │   ├── geoip.db
-   │   ├── geosite.db
-   │   ├── ui
-   │   └── ui.zip
-   ├── sing-box-1.10.0-darwin-arm64.tar.gz
-   ├── sing-box-start.sh
-   ├── subs-fix.py
-   └── temp_config.json
+    ├── 1.13.0-alpha.8.json
+    ├── config_with_nodes.json
+    ├── config.json
+    ├── config.json.bak
+    ├── filtered_nodes.json
+    ├── group_patterns.txt
+    ├── sing-box
+    ├── sing-box_config
+    │   ├── cache.db
+    │   ├── geoip-cn.srs
+    │   ├── geosite-category-ads-all.srs
+    │   ├── geosite-geolocation-!cn.srs
+    │   ├── ui
+    │   └── ui.zip
+    ├── sing-box-1.13.0-alpha.8-darwin-arm64.tar.gz
+    ├── sing-box-start.sh
+    ├── subs-fix.py
+    └── temp_config.json
    ```
 
 5. 按照脚本提示启动 Sing-Box tun 代理：
@@ -126,7 +131,7 @@ https://sub.d1.mk/sub
 可自行替换为其他 Sing-Box 订阅转换服务，只需支持如下参数结构：
 
 ```
-?target=singbox&insert=true&url=<订阅链接>&config=<规则模板链接>
+?target=singbox&insert=true&url=<订阅链接>
 ```
 
 ---
