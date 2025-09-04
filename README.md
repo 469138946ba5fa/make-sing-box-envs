@@ -1,5 +1,5 @@
 # make-sing-box-envs
-Sing-Box 一键搭建配置脚本（macOS arm64）
+Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 
 ![Watchers](https://img.shields.io/github/watchers/469138946ba5fa/make-sing-box-envs) ![Stars](https://img.shields.io/github/stars/469138946ba5fa/make-sing-box-envs) ![Forks](https://img.shields.io/github/forks/469138946ba5fa/make-sing-box-envs) ![Vistors](https://visitor-badge.laobi.icu/badge?page_id=469138946ba5fa.make-sing-box-envs) ![LICENSE](https://img.shields.io/badge/license-CC%20BY--SA%204.0-green.svg)
 <a href="https://star-history.com/#469138946ba5fa/make-sing-box-envs&Date">
@@ -27,8 +27,8 @@ Sing-Box 一键搭建配置脚本（macOS arm64）
 * 😑关于先有鸡还是先有蛋的问题，说来可笑想搭建代理环境，必须要有代理环境，哎，太可笑了，太可悲了，哎
   * 本脚本会安装 brew ggrep 和 unar 工具，这需要代理环境，请配置临时代理环境执行本脚本直到结束，哎
 * 本脚本依赖 python 环境请自行好提前准备好，本脚本会生成 python 脚本，用于解析json，为支持tls的节点插入 tls.insecure="true"  
-* 如需**全局路由**，请将路由器 DHCP 下发网关设置为本机 IP 同时设置下发 DNS 为任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址
-* 如需**旁路由**，请将路由器或设备网关设置为本机 IP 同时设置 DNS 为任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址
+* 如需**全局路由**，请将路由器 DHCP 下发网关设置为本机 IP 同时设置下发 DNS 为路由器 IP 或任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址
+* 如需**旁路由**，请将路由器或设备网关设置为本机 IP 同时设置 DNS  为路由器 IP 或任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址
 * 如需**端口代理**，请将联网代理设置为本机 IP:7890
 * 若出现网络策略未生效，请检查系统是否允许 `utun` 接口访问网络
 * 为启用系统级转发，会尝试设置 `net.inet.ip.forwarding=1`，需要管理员权限
