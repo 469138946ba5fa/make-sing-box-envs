@@ -220,7 +220,7 @@ if [ -f '${TMP_FILE}' ]; then
 fi
 
 # -L --retry 3 --retry-delay 5 --progress-bar 
-if curl -L --retry 3 --retry-delay 5 --progress-bar -o '${TMP_FILE}' '${SUB_URL}'; then
+if curl -k -L --retry 3 --retry-delay 5 --progress-bar -o '${TMP_FILE}' '${SUB_URL}'; then
     # curl 成功，继续检查文件内容
     if [ ! -s '${TMP_FILE}' ]; then # -s 检查文件是否存在且大小不为0
         echo "Error: ${TMP_FILE} is empty or not created after curl. Exiting."
