@@ -318,22 +318,36 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 替换测试 URL 为更稳定的 Cloudflare
     # 修复 sing-box config.json 中自动选择策略的 url-test 设置
     jq '
-      # 只修改 inbounds 中 type 为 mixed 的 listen_port
+      # 1. 修改 inbounds 中 tag 为 mixed-in 的 listen_port
       .inbounds |= map(
-        if .type == "mixed" then
+        if .tag == "mixed-in" then
           .listen_port = 7890
         else
           .
         end
       )
-      # 修改 url-test 对象
-      | (.outbounds[] | select(.type=="urltest")) |=
+      # 2. 修改 outbounds 中 type=urltest 的 url/interval/tolerance
+      | (.outbounds[]? | select(.type=="urltest")) |=
           (.url = "http://cp.cloudflare.com/generate_204"
-          | .interval = "180s"
-          | .tolerance = 300)
-      # 修改 experimental.clash_api 中的 external_controller / external_ui
+           | .interval = "180s"
+           | .tolerance = 300)
+      # 3. 修正 experimental.clash_api 下 external_ui / external_controller
       | .experimental.clash_api.external_controller = ":9999"
       | .experimental.clash_api.external_ui = "ui"
+      # 4. 插入或修改 DNS inbound
+      | if any(.inbounds[]; .type == "dns") then
+          .inbounds |= map(
+            if .type == "dns" then .listen_port = 53 else . end
+          )
+        else
+          .inbounds += [{
+            "type": "dns",
+            "tag": "dns-in",
+            "listen": "0.0.0.0",
+            "listen_port": 53,
+            "detour": "dns_proxy"
+          }]
+        end
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
