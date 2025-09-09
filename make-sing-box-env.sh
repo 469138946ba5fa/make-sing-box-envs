@@ -318,26 +318,22 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 替换测试 URL 为更稳定的 Cloudflare
     # 修复 sing-box config.json 中自动选择策略的 url-test 设置
     jq '
-      (.. | objects | select(has("url")))
-        |= (.url = "http://cp.cloudflare.com/generate_204")
-      | (.. | objects | select(has("interval")))
-        |= (.interval = "180s")
-      | (.. | objects | select(has("tolerance")))
-        |= (.tolerance = 300)
-      | (.. | objects | select(has("listen_port")))
-        |= (.listen_port = 7890)
-      | (.. | objects | select(has("external_controller")))
-        |= (.external_controller = ":9999")
-      | (.. | objects | select(has("external_ui")))
-        |= (.external_ui = "ui")
-      # 插入 DNS inbound 到顶层 inbounds 数组
-      #| .inbounds += [{
-      #    "type": "dns",
-      #    "tag": "dns-in",
-      #    "listen": "0.0.0.0",
-      #    "listen_port": 53,
-      #    "detour": "dns_proxy"
-      #  }]
+      # 只修改 inbounds 中 tag 为 mixed-in 的 listen_port
+      .inbounds |= map(
+        if .type == "mixed" then
+          .listen_port = 7890
+        else
+          .
+        end
+      )
+      # 修改 url-test 对象
+      | (.outbounds[] | select(.type=="urltest")) |=
+        (.url = "http://cp.cloudflare.com/generate_204"
+         | .interval = "180s"
+         | .tolerance = 300)
+      # 修改全局 external_controller / external_ui
+      | .external_controller = ":9999"
+      | .external_ui = "ui"
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
@@ -430,8 +426,12 @@ rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 
 # TCP/UDP 流量转发到 sing-box 7890
 #rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1 port 7890
+# TCP 流量转发到 sing-box 7890
+#rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1 port 7890
 # TCP/UDP 流量转发到 sing-box TUN
-rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
+#rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
+# TCP 流量转发到 sing-box TUN
+rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
 469138946ba5fa_1
 
   # 重载 PF 加载并启用 PF
