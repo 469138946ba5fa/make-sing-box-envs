@@ -93,7 +93,7 @@ read -r SUBS_API
 SUBS_API=${SUBS_API:-'https://sub.d1.mk/sub'}
 #SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}'&config='${RULES}
 SUB_URL=${SUBS_API}'?target=singbox&insert=true&new_name=true&scv=true&udp=true&exclude=&include=&url='${SUBS}
-SING_BOX_PATH='/SagerNet/sing-box/releases/download/v1.13.0-alpha.8'
+SING_BOX_PATH='/SagerNet/sing-box/releases/download/v1.13.0-alpha.9'
 VERSION=sing-box-$(basename ${SING_BOX_PATH} | tr 'A-Z' 'a-z' | sed 's;v;;g')-darwin-arm64.tar.gz
 echo "https://github.com${SING_BOX_PATH}/${VERSION}"
 SING_BOX_BIN_FILE_URL="https://github.com${SING_BOX_PATH}/${VERSION}"
@@ -109,8 +109,8 @@ GEOSITE_LOCATION_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/ru
 GEOSITE_LOCATION_FILE=${SING_BOX_DIR}'/geosite-geolocation-!cn.srs'
 GEOSITE_CATEGORY_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ads-all.srs'
 GEOSITE_CATEGORY_FILE=${SING_BOX_DIR}'/geosite-category-ads-all.srs'
-SING_BOX_CONFIG_TEMPLATES_URL="https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/1.13.0-alpha.8.json"
-SING_BOX_CONFIG_TEMPLATES_FILE=${SING_BOX_DIR_PATH}'/1.13.0-alpha.8.json'
+SING_BOX_CONFIG_TEMPLATES_URL="https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/1.13.0-alpha.9.json"
+SING_BOX_CONFIG_TEMPLATES_FILE=${SING_BOX_DIR_PATH}'/1.13.0-alpha.9.json'
 TMP_FILE=${SING_BOX_DIR_PATH}'/temp_config.json'
 OUT_FILE=${SING_BOX_DIR_PATH}'/out_config.json'
 BASE_FILE=${SING_BOX_DIR_PATH}'/base_config.json'
