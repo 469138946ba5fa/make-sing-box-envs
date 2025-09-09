@@ -244,7 +244,7 @@ if [ -f '${SING_BOX_FILE}' ]; then
           .inbounds += [{
             "type": "direct",
             "tag": "dns-in",
-            "listen": "::",
+            "listen": "0.0.0.0",
             "listen_port": 53,
             "sniff_override_destination": true,
             "network": "udp"
