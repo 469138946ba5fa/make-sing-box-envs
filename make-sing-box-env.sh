@@ -405,8 +405,8 @@ pf_nat_udp_tcp() {
   #RDR_RULE='rdr pass on en0 proto udp from any to any -> 172.19.0.1'
   #RDR_RULE="rdr pass on \$IFACE proto udp from any to any -> 172.19.0.1 \$MARKER"
   RDR_RULE='rdr-anchor "singbox/*" '\$MARKER
-  NAT_RDR_RULE='load anchor "singbox" from "/etc/pf.anchors/singbox" '\$MARKER
   ANCHOR_FILE="/etc/pf.anchors/singbox"
+  NAT_RDR_RULE='load anchor "singbox" from "\$ANCHOR_FILE" '\$MARKER
   PF_CONF="/etc/pf.conf"
 
   # 删除旧规则（带标记的）
