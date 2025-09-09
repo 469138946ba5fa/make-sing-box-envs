@@ -211,7 +211,7 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 替换测试 URL 为更稳定的 Cloudflare
     # 修复 sing-box config.json 中自动选择策略的 url-test 设置
     jq '
-      # 只修改 inbounds 中 tag 为 mixed-in 的 listen_port
+      # 只修改 inbounds 中 type 为 mixed 的 listen_port
       .inbounds |= map(
         if .type == "mixed" then
           .listen_port = 7890
@@ -221,12 +221,12 @@ if [ -f '${SING_BOX_FILE}' ]; then
       )
       # 修改 url-test 对象
       | (.outbounds[] | select(.type=="urltest")) |=
-        (.url = "http://cp.cloudflare.com/generate_204"
-         | .interval = "180s"
-         | .tolerance = 300)
-      # 修改全局 external_controller / external_ui
-      | .external_controller = ":9999"
-      | .external_ui = "ui"
+          (.url = "http://cp.cloudflare.com/generate_204"
+          | .interval = "180s"
+          | .tolerance = 300)
+      # 修改 experimental.clash_api 中的 external_controller / external_ui
+      | .experimental.clash_api.external_controller = ":9999"
+      | .experimental.clash_api.external_ui = "ui"
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
