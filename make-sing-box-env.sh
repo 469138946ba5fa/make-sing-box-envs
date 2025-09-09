@@ -337,7 +337,7 @@ pf_nat_udp_tcp() {
   # 检查 /etc/pf.conf 是否存在 load anchor
   if grep -q "load anchor" "\$PF_CONF"; then
       # 找到 anchor，使用原有方式插入
-      sudo sed -i '' "/load anchor/a\\
+      sudo sed -i '' "/load anchor/a\\\\
 \$NAT_RDR_RULE
 " "\$PF_CONF"
   else
