@@ -413,52 +413,12 @@ pf_nat_udp_tcp() {
   sudo sed -i '' "/\$MARKER/d" "\$PF_CONF"
   sudo rm -fv \$ANCHOR_FILE
 
-  # 插入 NAT 规则
-  # 检查 /etc/pf.conf 是否存在 nat-anchor
-  if grep -q "nat-anchor" "\$PF_CONF"; then
-      # 找到 anchor，使用原有方式插入
-      sudo sed -i '' "/nat-anchor/a\\\\
-\$NAT_RULE
-" "\$PF_CONF"
-  else
-      # 没找到 anchor，直接追加到文件末尾
-      #echo "\$NAT_RULE" | sudo tee -a "\$PF_CONF"
-      printf '%s\n' "\$NAT_RULE" | sudo tee -a "\$PF_CONF"
-
-  fi
-
-  # 插入 RDR 规则
-  # 检查 /etc/pf.conf 是否存在 rdr-anchor
-  if grep -q "rdr-anchor" "\$PF_CONF"; then
-      # 找到 anchor，使用原有方式插入
-      sudo sed -i '' "/rdr-anchor/a\\\\
-\$RDR_RULE
-" "\$PF_CONF"
-  else
-      # 没找到 anchor，直接追加到文件末尾
-      #echo "\$RDR_RULE" | sudo tee -a "\$PF_CONF"
-      printf '%s\n' "\$RDR_RULE" | sudo tee -a "\$PF_CONF"
-  fi
-
-  # 加载规则
-  # 检查 /etc/pf.conf 是否存在 load anchor
-  if grep -q "load anchor" "\$PF_CONF"; then
-      # 找到 anchor，使用原有方式插入
-      sudo sed -i '' "/load anchor/a\\\\
-\$NAT_RDR_RULE
-" "\$PF_CONF"
-  else
-      # 没找到 anchor，直接追加到文件末尾
-      #echo "\$NAT_RDR_RULE" | sudo tee -a "\$PF_CONF"
-      printf '%s\n' "\$NAT_RDR_RULE" | sudo tee -a "\$PF_CONF"
-  fi
-
   # 写入 anchor 规则
   cat <<469138946ba5fa_1 | sudo tee \$ANCHOR_FILE
-# NAT 所有来自局域网的流量
+# NAT 出口伪装，保证 Mac 自身流量出外网正常
 nat on \$IFACE from any to any -> (\$IFACE)
 
-# DNS 劫持：所有设备的 DNS 请求转发到 TUN 网卡
+# DNS 劫持（如果设备没手动设置 DNS）
 rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 
 # TCP/UDP 流量转发到 sing-box 7890
@@ -471,11 +431,38 @@ rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
 469138946ba5fa_1
 
+  # 查找插入位置
+  START_LINE=$(grep -nE 'scrub-anchor|dummynet-anchor' "\$PF_CONF" | tail -1 | cut -d: -f1)
+  END_LINE=$(grep -n 'anchor "com.apple/\*"' "\$PF_CONF" | head -1 | cut -d: -f1)
+
+  if [[ -n "\$START_LINE" && "\$END_LINE" -gt 0 ]]; then
+      # 插入在 START_LINE 后一行，保证顺序
+      INSERT_LINE=\$((START_LINE + 1))
+      sudo sed -i '' "\${INSERT_LINE}i\\\\
+\$NAT_RULE\\\\
+\$RDR_RULE\\\\
+\$NAT_RDR_RULE
+" "\$PF_CONF"
+      echo "自定义 anchor 插入完成"
+  else
+      # 没找到参考位置，直接追加到文件末尾
+      printf '%s\n' \\
+      "\$NAT_RULE" \\
+      "\$RDR_RULE" \\
+      "\$NAT_RDR_RULE" \\
+      | sudo tee -a "\$PF_CONF" >/dev/null
+      echo "自定义 anchor 追加到文件末尾"
+  fi
+
   # 重载 PF 加载并启用 PF
   sudo pfctl -d 2>/dev/null || true
   sudo pfctl -f "\$PF_CONF" || true
   sudo pfctl -e || true
+  # 应该能看到 singbox 的 NAT/RDR
   sudo pfctl -s nat
+  sudo pfctl -s rules
+  sudo pfctl -a singbox -s nat
+  sudo pfctl -a singbox -s all
 }
 
 pf_nat_udp_tcp
