@@ -211,34 +211,43 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 替换测试 URL 为更稳定的 Cloudflare
     # 修复 sing-box config.json 中自动选择策略的 url-test 设置
     jq '
-      # 1. 修改 inbounds 中 tag 为 mixed-in 的 listen_port
+      # 1. 修改 mixed 的 listen_port
       .inbounds |= map(
-        if .tag == "mixed-in" then
+        if .type == "mixed" then
           .listen_port = 7890
         else
           .
         end
       )
-      # 2. 修改 outbounds 中 type=urltest 的 url/interval/tolerance
-      | (.outbounds[]? | select(.type=="urltest")) |=
+      # 2. 修改 urltest 对象
+      | (.outbounds[] | select(.type=="urltest")) |=
           (.url = "http://cp.cloudflare.com/generate_204"
            | .interval = "180s"
            | .tolerance = 300)
-      # 3. 修正 experimental.clash_api 下 external_ui / external_controller
-      | .experimental.clash_api.external_controller = ":9999"
-      | .experimental.clash_api.external_ui = "ui"
-      # 4. 插入或修改 DNS inbound
-      | if any(.inbounds[]; .type == "dns") then
+      # 3. 修改 experimental.clash_api 的 external_controller / external_ui（如果存在）
+      | if .experimental? and .experimental.clash_api? then
+          .experimental.clash_api.external_controller = ":9999"
+          | .experimental.clash_api.external_ui = "ui"
+        else
+          .
+        end
+      # 4. 插入或修改 DNS UDP 53 inbound
+      | if any(.inbounds[]; .type=="direct" and .network=="udp") then
           .inbounds |= map(
-            if .type == "dns" then .listen_port = 53 else . end
+            if .type=="direct" and .network=="udp" then
+              .listen_port = 53
+            else
+              .
+            end
           )
         else
           .inbounds += [{
-            "type": "dns",
+            "type": "direct",
             "tag": "dns-in",
-            "listen": "0.0.0.0",
+            "listen": "::",
             "listen_port": 53,
-            "detour": "dns_proxy"
+            "sniff_override_destination": true,
+            "network": "udp"
           }]
         end
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
