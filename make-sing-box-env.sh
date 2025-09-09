@@ -325,8 +325,8 @@ rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
 469138946ba5fa_1
 
   # 查找插入位置
-  START_LINE=$(grep -nE 'scrub-anchor|dummynet-anchor' "\$PF_CONF" | tail -1 | cut -d: -f1)
-  END_LINE=$(grep -n 'anchor "com.apple/\*"' "\$PF_CONF" | head -1 | cut -d: -f1)
+  START_LINE=\$(grep -nE 'scrub-anchor|dummynet-anchor' "\$PF_CONF" | tail -1 | cut -d: -f1)
+  END_LINE=\$(grep -n 'anchor "com.apple/\*"' "\$PF_CONF" | head -1 | cut -d: -f1)
 
   if [[ -n "\$START_LINE" && "\$END_LINE" -gt 0 ]]; then
       # 插入在 START_LINE 后一行，保证顺序
