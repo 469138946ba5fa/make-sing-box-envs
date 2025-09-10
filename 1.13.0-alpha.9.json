@@ -31,8 +31,37 @@
     ],
     "rules": [
       {
+        "rule_set": "category-ads-all",
+        "server": "dns_block",
+        "disable_cache": true
+      },
+      {
         "clash_mode": "direct",
         "server": "dns_resolver"
+      },
+      {
+        "rule_set": "geosite-cn",
+        "server": "dns_resolver"
+      },
+      {
+        "rule_set": "geosite-geolocation-cn",
+        "server": "dns_resolver"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "rule_set": "geosite-cn",
+        "server": "dns_direct"
+      },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "server": "dns_fakeip"
+      },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "server": "dns_proxy"
       },
       {
         "clash_mode": "global",
@@ -43,48 +72,8 @@
           "A",
           "AAAA"
         ],
-        "rule_set": "geosite-cn",
-        "server": "dns_fakeip"
-      },
-      {
-        "rule_set": "geosite-cn",
-        "server": "dns_resolver"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "rule_set": "geosite-geolocation-!cn",
-            "invert": true
-          },
-          {
-            "rule_set": "geoip-cn"
-          }
-        ],
-        "server": "dns_proxy",
-        "client_subnet": "114.114.114.114/24"
-      },
-      {
-        "action": "predefined",
-        "rcode": "NOERROR"
-      },
-      {
-        "rule_set": "category-ads-all",
-        "server": "dns_block",
-        "disable_cache": true
-      },
-      {
-        "query_type": [
-          "A",
-          "AAAA"
-        ],
         "rule_set": "geosite-geolocation-!cn",
         "server": "dns_fakeip"
-      },
-      {
-        "rule_set": "geosite-geolocation-!cn",
-        "server": "dns_proxy"
       }
     ],
     "final": "dns_direct",
@@ -122,6 +111,10 @@
     {
       "type": "direct",
       "tag": "DIRECT"
+    },
+    {
+      "type": "block",
+      "tag": "dns_block"
     },
     {
       "type": "selector",
@@ -510,100 +503,55 @@
         "action": "hijack-dns"
       },
       {
-        "ip_is_private": true,
-        "clash_mode": "direct",
         "rule_set": [
-          "geoip-cn",
-          "geosite-cn"
+          "geosite-goproxy",
+          "geosite-openai",
+          "geosite-google-gemini",
+          "geosite-category-ai-chat-!cn",
+          "geosite-telegram",
+          "geosite-googlefcm",
+          "geosite-netflix",
+          "geosite-disney",
+          "geosite-youtube",
+          "geosite-category-games-!cn",
+          "geosite-dmm",
+          "geosite-hbo",
+          "geosite-primevideo",
+          "geosite-bilibili@!cn"
         ],
-        "outbound": "🎯 全球直连"
+        "outbound": "🚀 节点选择"
       },
       {
-        "clash_mode": "rule",
         "rule_set": [
-          "geosite-category-ai-chat-!cn@ads",
-          "geosite-category-media-cn@ads",
-          "geosite-disney@ads",
+          "geosite-netease",
+          "geosite-microsoft",
+          "geosite-apple",
+          "geosite-bahamut",
+          "geosite-primevideo@cn",
+          "geosite-category-media-cn"
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "rule_set": [
           "geosite-easylist",
+          "geosite-disney@ads",
+          "geosite-geolocation-cn@ads",
           "geosite-geolocation-!cn@ads",
-          "geosite-geolocation-cn@ads"
+          "geosite-category-ai-chat-!cn@ads"
         ],
         "action": "reject"
       },
       {
-        "rule_set": "geosite-googlefcm",
-        "outbound": "📢 谷歌FCM"
-      },
-      {
-        "rule_set": "geosite-netflix",
-        "outbound": "🎥 NETFLIX"
-      },
-      {
-        "rule_set": "geosite-disney",
-        "outbound": "🎥 DisneyP"
-      },
-      {
-        "rule_set": "geosite-youtube",
-        "outbound": "🎥 YouTube"
-      },
-      {
-        "rule_set": "geosite-bilibili@!cn",
-        "outbound": "📺 哔哩海外"
+        "ip_is_private": true,
+        "outbound": "DIRECT"
       },
       {
         "rule_set": [
-          "geosite-openai",
-          "geosite-google-gemini",
-          "geosite-category-ai-chat-!cn"
+          "geosite-cn",
+          "geoip-cn"
         ],
-        "outbound": "🤖 人工智能"
-      },
-      {
-        "rule_set": "geosite-microsoft",
-        "outbound": "Ⓜ️ 微软服务"
-      },
-      {
-        "rule_set": "geosite-apple",
-        "outbound": "🍎 苹果服务"
-      },
-      {
-        "rule_set": "geosite-telegram",
-        "outbound": "📲 电报消息"
-      },
-      {
-        "rule_set": [
-          "geosite-category-games-!cn",
-          "geosite-dmm"
-        ],
-        "outbound": "🎮 外服游戏"
-      },
-      {
-        "rule_set": "geosite-bahamut",
-        "outbound": "📺 巴哈姆特"
-      },
-      {
-        "rule_set": [
-          "geosite-hbo",
-          "geosite-primevideo"
-        ],
-        "outbound": "🌍 国外媒体"
-      },
-      {
-        "clash_mode": "direct",
-        "rule_set": [
-          "geosite-primevideo@cn",
-          "geosite-category-media-cn"
-        ],
-        "outbound": "🌏 国内媒体"
-      },
-      {
-        "rule_set": "geosite-netease",
-        "outbound": "🎶 网易音乐"
-      },
-      {
-        "clash_mode": "global",
-        "rule_set": "geosite-goproxy",
-        "outbound": "🚀 节点选择"
+        "outbound": "DIRECT"
       }
     ],
     "rule_set": [
@@ -616,8 +564,8 @@
       },
       {
         "type": "remote",
-        "tag": "geosite-category-media-cn@ads",
-        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-media-cn@ads.srs",
+        "tag": "geosite-geolocation-cn",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
@@ -840,3 +788,4 @@
     }
   }
 }
+
