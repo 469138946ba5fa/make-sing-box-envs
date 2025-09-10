@@ -103,12 +103,6 @@ SING_BOX_BIN_FILE_RENAME="${SING_BOX_DIR_PATH}/sing-box"
 UI_PATH=$(curl -SL --connect-timeout 30 -m 60 --speed-time 30 --speed-limit 1 --retry 2 -H "Connection: keep-alive" -k 'https://github.com/Zephyruso/zashboard/releases' | sed 's;";\n;g;s;tag;download;g' | grep '/download/' | head -n 1)
 UI_URL="https://github.com${UI_PATH}/dist.zip"
 UI_FILE=${SING_BOX_DIR}'/ui.zip'
-GEOIP_URL='https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set/geoip-cn.srs'
-GEOIP_FILE=${SING_BOX_DIR}'/geoip-cn.srs'
-GEOSITE_LOCATION_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-geolocation-!cn.srs'
-GEOSITE_LOCATION_FILE=${SING_BOX_DIR}'/geosite-geolocation-!cn.srs'
-GEOSITE_CATEGORY_URL='https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set/geosite-category-ads-all.srs'
-GEOSITE_CATEGORY_FILE=${SING_BOX_DIR}'/geosite-category-ads-all.srs'
 SING_BOX_CONFIG_TEMPLATES_URL="https://github.com/469138946ba5fa/make-sing-box-envs/raw/refs/heads/master/1.13.0-alpha.9.json"
 SING_BOX_CONFIG_TEMPLATES_FILE=${SING_BOX_DIR_PATH}'/1.13.0-alpha.9.json'
 TMP_FILE=${SING_BOX_DIR_PATH}'/temp_config.json'
@@ -180,12 +174,6 @@ curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${SING_BOX_BIN_FILE_GZ}
 [ ! -f "$SING_BOX_BIN_FILE_GZ" ] && echo "sing-box压缩文件不存在：$SING_BOX_BIN_FILE_GZ" && exit 1
 curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${UI_FILE} ${UI_URL}
 [ ! -f "$UI_FILE" ] && echo "UI压缩文件不存在：$UI_FILE" && exit 1
-curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOIP_FILE} ${GEOIP_URL}
-[ ! -f "$GEOIP_FILE" ] && echo "GEOIP文件不存在：$GEOIP_FILE" && exit 1
-curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOSITE_LOCATION_FILE} ${GEOSITE_LOCATION_URL}
-[ ! -f "$GEOSITE_LOCATION_FILE" ] && echo "GEOSITE LOCATION文件不存在：$GEOSITE_LOCATION_FILE" && exit 1
-curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${GEOSITE_CATEGORY_FILE} ${GEOSITE_CATEGORY_URL}
-[ ! -f "$GEOSITE_CATEGORY_FILE" ] && echo "GEOSITE CATEGORY文件不存在：$GEOSITE_CATEGORY_FILE" && exit 1
 curl -L -C - --retry 3 --retry-delay 5 --progress-bar -o ${SING_BOX_CONFIG_TEMPLATES_FILE} ${SING_BOX_CONFIG_TEMPLATES_URL}
 [ ! -f "$SING_BOX_CONFIG_TEMPLATES_FILE" ] && echo "模板配置文件不存在：$SING_BOX_CONFIG_TEMPLATES_FILE" && exit 1
 
