@@ -357,6 +357,8 @@ if [ -f '${SING_BOX_FILE}' ]; then
             "network": "udp"
           }]
         end
+      # 5. 插入或修改 .route.rules[].inbound 嗅探 "dns-in"
+      | (.route.rules[] | select(.inbound? | type == "array") | .inbound += ["dns-in"])
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
