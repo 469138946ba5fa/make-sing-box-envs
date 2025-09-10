@@ -348,7 +348,6 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 5. 在 route.rules 里，凡是有 inbound 数组的，就追加 "dns-in"
     | .route.rules |= map(
         if .inbound? and (.inbound | type == "array") then
-          # 先判断是否已有 dns-in，避免重复
           if any(.inbound[]; . == "dns-in") then
             .
           else
@@ -358,7 +357,6 @@ if [ -f '${SING_BOX_FILE}' ]; then
           .
         end
       )
-      | (.route.rules[] | select(.inbound? | type == "array") | .inbound += ["dns-in"])
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
