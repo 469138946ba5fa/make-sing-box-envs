@@ -319,9 +319,9 @@ rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 # TCP 流量转发到 sing-box 7890
 #rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1 port 7890
 # TCP/UDP 流量转发到 sing-box TUN
-#rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
+rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
 # TCP 流量转发到 sing-box TUN
-rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
+#rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
 469138946ba5fa_1
 
   # 查找插入位置
