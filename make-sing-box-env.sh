@@ -490,8 +490,8 @@ IFS=\$IFS_BAK
 chmod -v a+x ${SING_BOX_START}
 echo "已生成启动脚本: ${SING_BOX_START}"
 
-echo "如果想要全局路由你需要配置路由器 DHCP 下发的 NetGateway 强制为本机 IP 同时将下发 DNS 为路由器 IP 或任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址"
-echo "如果想要旁路由，你需要为单个联网设备配置 NetGateway 强制为本机 IP 同时将下发 DNS 为路由器 IP 或任意真实 DNS（如 1.1.1.1, 8.8.8.8 或 223.5.5.5），不要设置为 172.19.0.1 或 fake-ip 地址"
+echo "如果想要全局路由你需要配置路由器 DHCP 下发的 Gateway 和 DNS 强制为本机 IP，不要将 DNS 设置为 172.19.0.1 或 fake-ip 地址"
+echo "如果想要旁路由，你需要为单个联网设备配置 Gateway 和 DNS 强制为本机 IP，不要将 DNS 设置为 172.19.0.1 或 fake-ip 地址"
 echo "如果想要端口代理，你需要将联网代理设置为本机 IP:7890"
 echo "如果想要本机，那就什么都没什么可说的了"
 echo "执行脚本 ${SING_BOX_START} 启动测试看看吧"
