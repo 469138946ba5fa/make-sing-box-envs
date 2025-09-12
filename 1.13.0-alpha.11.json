@@ -257,7 +257,8 @@
       ],
       "auto_route": true,
       "strict_route": true,
-      "stack": "mixed"
+      "stack": "mixed",
+      "sniff": true
     }
   ],
   "outbounds": [
@@ -920,4 +921,3 @@
     }
   }
 }
-
