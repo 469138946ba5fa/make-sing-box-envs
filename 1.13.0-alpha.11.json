@@ -10,17 +10,103 @@
         "tag": "dns_dhcp"
       },
       {
-        "type": "tcp",
+        "type": "udp",
         "tag": "dns_direct",
         "domain_resolver": "dns_dhcp",
         "server": "223.5.5.5"
       },
       {
-        "type": "tls",
+        "type": "hosts",
+        "tag": "dns_hosts",
+        "predefined": {
+          "dns.google": [
+            "8.8.8.8",
+            "8.8.4.4",
+            "2001:4860:4860::8888",
+            "2001:4860:4860::8844"
+          ],
+          "dns.alidns.com": [
+            "223.5.5.5",
+            "223.6.6.6",
+            "2400:3200::1",
+            "2400:3200:baba::1"
+          ],
+          "one.one.one.one": [
+            "1.1.1.1",
+            "1.0.0.1",
+            "2606:4700:4700::1111",
+            "2606:4700:4700::1001"
+          ],
+          "1dot1dot1dot1.cloudflare-dns.com": [
+            "1.1.1.1",
+            "1.0.0.1",
+            "2606:4700:4700::1111",
+            "2606:4700:4700::1001"
+          ],
+          "cloudflare-dns.com": [
+            "104.16.249.249",
+            "104.16.248.249",
+            "2606:4700::6810:f8f9",
+            "2606:4700::6810:f9f9"
+          ],
+          "dns.cloudflare.com": [
+            "104.16.132.229",
+            "104.16.133.229",
+            "2606:4700::6810:84e5",
+            "2606:4700::6810:85e5"
+          ],
+          "dot.pub": [
+            "1.12.12.12",
+            "120.53.53.53"
+          ],
+          "dns.quad9.net": [
+            "9.9.9.9",
+            "149.112.112.112",
+            "2620:fe::fe",
+            "2620:fe::9"
+          ],
+          "dns.yandex.net": [
+            "77.88.8.8",
+            "77.88.8.1",
+            "2a02:6b8::feed:ff",
+            "2a02:6b8:0:1::feed:ff"
+          ],
+          "dns.sb": [
+            "185.222.222.222",
+            "2a09::"
+          ],
+          "dns.umbrella.com": [
+            "208.67.220.220",
+            "208.67.222.222",
+            "2620:119:35::35",
+            "2620:119:53::53"
+          ],
+          "dns.sse.cisco.com": [
+            "208.67.220.220",
+            "208.67.222.222",
+            "2620:119:35::35",
+            "2620:119:53::53"
+          ],
+          "engage.cloudflareclient.com": [
+            "162.159.192.1",
+            "2606:4700:d0::a29f:c001"
+          ]
+        }
+      },
+      {
+        "type": "https",
         "tag": "dns_proxy",
         "detour": "🚀 节点选择",
-        "domain_resolver": "dns_dhcp",
-        "server": "1.1.1.1"
+        "domain_resolver": "dns_hosts",
+        "server": "cloudflare-dns.com",
+        "path": "/dns-query"
+      },
+      {
+        "type": "https",
+        "tag": "dns_resolver",
+        "domain_resolver": "dns_hosts",
+        "server": "dns.alidns.com",
+        "path": "/dns-query"
       },
       {
         "type": "fakeip",
@@ -40,18 +126,18 @@
           ".local",
           ".home"
         ],
+        "ip_accept_any": true,
         "clash_mode": "direct",
         "rule_set": [
           "geoip-cn",
-          "geosite-apple",
           "geosite-bahamut",
           "geosite-category-media-cn",
           "geosite-cn",
           "geosite-geolocation-cn",
           "geosite-netease",
-          "geosite-primevideo@cn"
+          "geosite-private"
         ],
-        "server": "dns_dhcp"
+        "server": "dns_hosts"
       },
       {
         "query_type": [
@@ -66,19 +152,19 @@
         "clash_mode": "direct",
         "rule_set": [
           "geoip-cn",
-          "geosite-apple",
           "geosite-bahamut",
           "geosite-category-media-cn",
           "geosite-cn",
           "geosite-geolocation-cn",
           "geosite-netease",
-          "geosite-primevideo@cn"
+          "geosite-private"
         ],
-        "server": "dns_direct"
+        "server": "dns_resolver"
       },
       {
         "clash_mode": "global",
         "rule_set": [
+          "geosite-apple",
           "geosite-bilibili@!cn",
           "geosite-category-ai-chat-!cn",
           "geosite-category-games-!cn",
@@ -104,6 +190,7 @@
           "AAAA"
         ],
         "rule_set": [
+          "geosite-apple",
           "geosite-bilibili@!cn",
           "geosite-category-ai-chat-!cn",
           "geosite-category-games-!cn",
@@ -124,20 +211,27 @@
         "server": "dns_fakeip"
       },
       {
+        "query_type": [
+          "SVCB",
+          "HTTPS"
+        ],
+        "action": "predefined",
+        "rcode": "NOTIMP"
+      },
+      {
         "rule_set": [
-          "geosite-easylist",
-          "geosite-disney@ads",
-          "geosite-geolocation-cn@ads",
-          "geosite-geolocation-!cn@ads",
+          "geosite-category-ads-all",
           "geosite-category-ai-chat-!cn@ads",
-          "geosite-category-ads-all"
+          "geosite-disney@ads",
+          "geosite-easylist",
+          "geosite-geolocation-!cn@ads",
+          "geosite-geolocation-cn@ads"
         ],
         "action": "predefined",
         "rcode": "NOERROR"
       }
     ],
-    "final": "dns_direct",
-    "strategy": "prefer_ipv4",
+    "final": "dns_proxy",
     "independent_cache": true
   },
   "ntp": {
@@ -163,8 +257,7 @@
       ],
       "auto_route": true,
       "strict_route": true,
-      "stack": "mixed",
-      "sniff": true
+      "stack": "mixed"
     }
   ],
   "outbounds": [
@@ -539,24 +632,25 @@
         "clash_mode": "direct",
         "rule_set": [
           "geoip-cn",
-          "geosite-apple",
           "geosite-bahamut",
           "geosite-category-media-cn",
           "geosite-cn",
           "geosite-geolocation-cn",
           "geosite-netease",
-          "geosite-primevideo@cn"
+          "geosite-private"
         ],
         "outbound": "DIRECT"
       },
       {
+        "network": "udp",
+        "port": 443,
         "rule_set": [
-          "geosite-easylist",
-          "geosite-disney@ads",
-          "geosite-geolocation-cn@ads",
-          "geosite-geolocation-!cn@ads",
+          "geosite-category-ads-all",
           "geosite-category-ai-chat-!cn@ads",
-          "geosite-category-ads-all"
+          "geosite-disney@ads",
+          "geosite-easylist",
+          "geosite-geolocation-!cn@ads",
+          "geosite-geolocation-cn@ads"
         ],
         "action": "reject"
       },
@@ -568,20 +662,14 @@
         "action": "sniff"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "port": 53
-          },
-          {
-            "protocol": "dns"
-          }
-        ],
+        "protocol": "dns",
+        "port": 53,
         "action": "hijack-dns"
       },
       {
+        "clash_mode": "global",
         "rule_set": [
+          "geosite-apple",
           "geosite-bilibili@!cn",
           "geosite-category-ai-chat-!cn",
           "geosite-category-games-!cn",
@@ -605,211 +693,211 @@
     "rule_set": [
       {
         "type": "remote",
-        "tag": "geosite-primevideo@cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-primevideo@cn.srs",
+        "tag": "geosite-private",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-private.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-geolocation-cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-geolocation-!cn@ads",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn@ads.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn@ads.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-apple",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-apple.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-apple.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-disney",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-disney.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-disney.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-disney@ads",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-disney@ads.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-disney@ads.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-netflix",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netflix.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netflix.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-youtube",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-youtube.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-youtube.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-category-games-!cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-games-!cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-games-!cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-category-ai-chat-!cn@ads",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ai-chat-!cn@ads.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ai-chat-!cn@ads.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-dmm",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-dmm.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-dmm.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-hbo",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-hbo.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-hbo.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-primevideo",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-primevideo.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-primevideo.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-google-gemini",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-google-gemini.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-google-gemini.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-category-ai-chat-!cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ai-chat-!cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ai-chat-!cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-netease",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netease.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netease.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-googlefcm",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-googlefcm.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-googlefcm.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-telegram",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-telegram.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-telegram.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-bilibili@!cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-bilibili@!cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-bilibili@!cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-bahamut",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-bahamut.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-bahamut.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-openai",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-openai.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-openai.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-goproxy",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-goproxy.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-goproxy.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-geolocation-cn@ads",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-cn@ads.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-cn@ads.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-category-media-cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-media-cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-media-cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-easylist",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-easylist.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-easylist.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-microsoft",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-microsoft.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-microsoft.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-category-ads-all",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geoip-cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       },
       {
         "type": "remote",
         "tag": "geosite-geolocation-!cn",
-        "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
       }
@@ -832,4 +920,3 @@
     }
   }
 }
-
