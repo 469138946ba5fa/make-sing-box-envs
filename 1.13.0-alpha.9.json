@@ -31,7 +31,16 @@
     "rules": [
       {
         "clash_mode": "direct",
-        "rule_set": "geosite-cn",
+        "rule_set": [
+          "geoip-cn",
+          "geosite-apple",
+          "geosite-bahamut",
+          "geosite-category-media-cn",
+          "geosite-cn",
+          "geosite-geolocation-cn",
+          "geosite-netease",
+          "geosite-primevideo@cn"
+        ],
         "server": "dns_resolver"
       },
       {
@@ -40,14 +49,37 @@
           "AAAA"
         ],
         "rule_set": [
+          "geoip-cn",
+          "geosite-apple",
+          "geosite-bahamut",
+          "geosite-category-media-cn",
           "geosite-cn",
-          "geosite-geolocation-cn"
+          "geosite-geolocation-cn",
+          "geosite-netease",
+          "geosite-primevideo@cn"
         ],
         "server": "dns_direct"
       },
       {
         "clash_mode": "global",
-        "rule_set": "geosite-geolocation-!cn",
+        "rule_set": [
+          "geosite-bilibili@!cn",
+          "geosite-category-ai-chat-!cn",
+          "geosite-category-games-!cn",
+          "geosite-disney",
+          "geosite-dmm",
+          "geosite-geolocation-!cn",
+          "geosite-google-gemini",
+          "geosite-googlefcm",
+          "geosite-goproxy",
+          "geosite-hbo",
+          "geosite-microsoft",
+          "geosite-netflix",
+          "geosite-openai",
+          "geosite-primevideo",
+          "geosite-telegram",
+          "geosite-youtube"
+        ],
         "server": "dns_proxy"
       },
       {
@@ -55,11 +87,35 @@
           "A",
           "AAAA"
         ],
-        "rule_set": "geosite-geolocation-!cn",
+        "rule_set": [
+          "geosite-bilibili@!cn",
+          "geosite-category-ai-chat-!cn",
+          "geosite-category-games-!cn",
+          "geosite-disney",
+          "geosite-dmm",
+          "geosite-geolocation-!cn",
+          "geosite-google-gemini",
+          "geosite-googlefcm",
+          "geosite-goproxy",
+          "geosite-hbo",
+          "geosite-microsoft",
+          "geosite-netflix",
+          "geosite-openai",
+          "geosite-primevideo",
+          "geosite-telegram",
+          "geosite-youtube"
+        ],
         "server": "dns_fakeip"
       },
       {
-        "rule_set": "category-ads-all",
+        "rule_set": [
+          "geosite-easylist",
+          "geosite-disney@ads",
+          "geosite-geolocation-cn@ads",
+          "geosite-geolocation-!cn@ads",
+          "geosite-category-ai-chat-!cn@ads",
+          "geosite-category-ads-all"
+        ],
         "action": "predefined",
         "rcode": "NOERROR"
       }
@@ -466,14 +522,14 @@
         "ip_is_private": true,
         "clash_mode": "direct",
         "rule_set": [
-          "geosite-netease",
-          "geosite-microsoft",
+          "geoip-cn",
           "geosite-apple",
           "geosite-bahamut",
-          "geosite-primevideo@cn",
           "geosite-category-media-cn",
           "geosite-cn",
-          "geoip-cn"
+          "geosite-geolocation-cn",
+          "geosite-netease",
+          "geosite-primevideo@cn"
         ],
         "outbound": "DIRECT"
       },
@@ -483,7 +539,8 @@
           "geosite-disney@ads",
           "geosite-geolocation-cn@ads",
           "geosite-geolocation-!cn@ads",
-          "geosite-category-ai-chat-!cn@ads"
+          "geosite-category-ai-chat-!cn@ads",
+          "geosite-category-ads-all"
         ],
         "action": "reject"
       },
@@ -509,20 +566,22 @@
       },
       {
         "rule_set": [
-          "geosite-goproxy",
-          "geosite-openai",
-          "geosite-google-gemini",
+          "geosite-bilibili@!cn",
           "geosite-category-ai-chat-!cn",
-          "geosite-telegram",
-          "geosite-googlefcm",
-          "geosite-netflix",
-          "geosite-disney",
-          "geosite-youtube",
           "geosite-category-games-!cn",
+          "geosite-disney",
           "geosite-dmm",
+          "geosite-geolocation-!cn",
+          "geosite-google-gemini",
+          "geosite-googlefcm",
+          "geosite-goproxy",
           "geosite-hbo",
+          "geosite-microsoft",
+          "geosite-netflix",
+          "geosite-openai",
           "geosite-primevideo",
-          "geosite-bilibili@!cn"
+          "geosite-telegram",
+          "geosite-youtube"
         ],
         "outbound": "🚀 节点选择"
       }
@@ -719,7 +778,7 @@
       },
       {
         "type": "remote",
-        "tag": "category-ads-all",
+        "tag": "geosite-category-ads-all",
         "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs",
         "download_detour": "DIRECT",
         "update_interval": "24h0m0s"
@@ -757,3 +816,4 @@
     }
   }
 }
+
