@@ -231,7 +231,7 @@
         "rcode": "NOERROR"
       }
     ],
-    "final": "dns_proxy",
+    "final": "dns_direct",
     "independent_cache": true
   },
   "ntp": {
@@ -903,7 +903,7 @@
         "update_interval": "24h0m0s"
       }
     ],
-    "final": "DIRECT",
+    "final": "🐟 漏网之鱼",
     "auto_detect_interface": true,
     "default_domain_resolver": "dns_direct"
   },
@@ -921,3 +921,4 @@
     }
   }
 }
+
