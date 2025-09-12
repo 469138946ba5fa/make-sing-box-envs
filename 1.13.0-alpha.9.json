@@ -6,9 +6,8 @@
   "dns": {
     "servers": [
       {
-        "type": "tcp",
-        "tag": "dns_direct",
-        "server": "114.114.114.114"
+        "type": "dhcp",
+        "tag": "dns_direct"
       },
       {
         "type": "udp",
@@ -29,43 +28,17 @@
     ],
     "rules": [
       {
-        "clash_mode": "direct",
         "query_type": [
           "A",
           "AAAA"
         ],
-        "rule_set": [
-          "geoip-cn",
-          "geosite-apple",
-          "geosite-bahamut",
-          "geosite-category-media-cn",
-          "geosite-cn",
-          "geosite-geolocation-cn",
-          "geosite-netease",
-          "geosite-primevideo@cn"
-        ],
+        "clash_mode": "direct",
+        "rule_set": "geosite-geolocation-cn",
         "server": "dns_resolver"
       },
       {
         "clash_mode": "global",
-        "rule_set": [
-          "geosite-bilibili@!cn",
-          "geosite-category-ai-chat-!cn",
-          "geosite-category-games-!cn",
-          "geosite-disney",
-          "geosite-dmm",
-          "geosite-geolocation-!cn",
-          "geosite-google-gemini",
-          "geosite-googlefcm",
-          "geosite-goproxy",
-          "geosite-hbo",
-          "geosite-microsoft",
-          "geosite-netflix",
-          "geosite-openai",
-          "geosite-primevideo",
-          "geosite-telegram",
-          "geosite-youtube"
-        ],
+        "rule_set": "geosite-geolocation-!cn",
         "server": "dns_proxy"
       },
       {
@@ -73,35 +46,11 @@
           "A",
           "AAAA"
         ],
-        "rule_set": [
-          "geosite-bilibili@!cn",
-          "geosite-category-ai-chat-!cn",
-          "geosite-category-games-!cn",
-          "geosite-disney",
-          "geosite-dmm",
-          "geosite-geolocation-!cn",
-          "geosite-google-gemini",
-          "geosite-googlefcm",
-          "geosite-goproxy",
-          "geosite-hbo",
-          "geosite-microsoft",
-          "geosite-netflix",
-          "geosite-openai",
-          "geosite-primevideo",
-          "geosite-telegram",
-          "geosite-youtube"
-        ],
+        "rule_set": "geosite-geolocation-!cn",
         "server": "dns_fakeip"
       },
       {
-        "rule_set": [
-          "geosite-easylist",
-          "geosite-disney@ads",
-          "geosite-geolocation-cn@ads",
-          "geosite-geolocation-!cn@ads",
-          "geosite-category-ai-chat-!cn@ads",
-          "geosite-category-ads-all"
-        ],
+        "rule_set": "geosite-category-ads-all",
         "action": "predefined",
         "rcode": "NOERROR"
       }
@@ -802,3 +751,4 @@
     }
   }
 }
+
