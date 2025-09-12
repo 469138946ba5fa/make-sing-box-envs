@@ -6,22 +6,20 @@
   "dns": {
     "servers": [
       {
-        "tag": "dns_resolver",
         "type": "udp",
+        "tag": "dns_resolver",
         "server": "223.5.5.5"
       },
       {
-        "tag": "dns_direct",
         "type": "h3",
-        "server": "dns.alidns.com",
-        "domain_resolver": "dns_resolver",
-        "detour": "DIRECT"
+        "tag": "dns_direct",
+        "detour": "DIRECT",
+        "server": "dns.alidns.com"
       },
       {
-        "tag": "dns_proxy",
         "type": "tls",
-        "server": "1.1.1.1",
-        "domain_resolver": "dns_resolver"
+        "tag": "dns_proxy",
+        "server": "1.1.1.1"
       },
       {
         "type": "fakeip",
@@ -32,8 +30,8 @@
     ],
     "rules": [
       {
-        "rule_set": "geosite-cn",
         "clash_mode": "direct",
+        "rule_set": "geosite-cn",
         "server": "dns_resolver"
       },
       {
@@ -62,7 +60,6 @@
       },
       {
         "rule_set": "category-ads-all",
-        "domain": [],
         "action": "predefined",
         "rcode": "NOERROR"
       }
@@ -462,11 +459,12 @@
   "route": {
     "rules": [
       {
-        "clash_mode": "Global",
+        "clash_mode": "global",
         "outbound": "GLOBAL"
       },
       {
-        "clash_mode": "Direct",
+        "ip_is_private": true,
+        "clash_mode": "direct",
         "rule_set": [
           "geosite-netease",
           "geosite-microsoft",
@@ -477,7 +475,6 @@
           "geosite-cn",
           "geoip-cn"
         ],
-        "ip_is_private": true,
         "outbound": "DIRECT"
       },
       {
@@ -742,13 +739,9 @@
         "update_interval": "24h0m0s"
       }
     ],
-    "final": "♻️ 自动选择",
+    "final": "🚀 节点选择",
     "auto_detect_interface": true,
-    "default_domain_resolver": {
-      "server": "dns_resolver",
-      "rewrite_ttl": 60,
-      "client_subnet": "1.1.1.1"
-    }
+    "default_domain_resolver": "dns_direct"
   },
   "experimental": {
     "cache_file": {
@@ -764,5 +757,3 @@
     }
   }
 }
-
-
