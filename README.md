@@ -34,6 +34,13 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 * 为启用系统级转发，会尝试设置 `net.inet.ip.forwarding=1`，需要管理员权限
 * 本脚本会自己检测桌面是否包含 $HOME/Desktop/sing-boxs 目录，如果存在则会自动拼接 uuid 作为新目录在桌面创建
   * 例如 $HOME/Desktop/sing-boxs-19AF2BFC-8B73-4678-992C-01BE6045C635
+* 脚本中的json模板文件使用加速源链接`gcore.jsdelivr.net`，效果不一定好，你需要多次启动测试，不行的话就替换其他加速的链接测试
+  ```plaintext
+  fastly.jsdelivr.net
+  testingcf.jsdelivr.net
+  test1.jsdelivr.net
+  cdn.jsdelivr.net
+  ```
 
 ## 💻 支持平台
 
