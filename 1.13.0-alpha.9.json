@@ -733,7 +733,7 @@
         "update_interval": "24h0m0s"
       }
     ],
-    "final": "🚀 节点选择",
+    "final": "DIRECT",
     "auto_detect_interface": true,
     "default_domain_resolver": "dns_direct"
   },
