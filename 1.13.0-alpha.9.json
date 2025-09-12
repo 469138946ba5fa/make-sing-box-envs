@@ -12,12 +12,11 @@
       {
         "type": "udp",
         "tag": "dns_resolver",
-        "server": "223.5.5.5"
+        "server": "119.29.29.29"
       },
       {
         "type": "h3",
         "tag": "dns_direct",
-        "detour": "DIRECT",
         "domain_resolver": "dns_resolver",
         "server": "dns.alidns.com",
         "path": "/dns-query"
@@ -25,6 +24,7 @@
       {
         "type": "tls",
         "tag": "dns_proxy",
+        "detour": "🚀 节点选择",
         "domain_resolver": "dns_resolver",
         "server": "1.1.1.1"
       },
@@ -37,12 +37,30 @@
     ],
     "rules": [
       {
+        "domain_suffix": [
+          ".lan",
+          ".local",
+          ".home"
+        ],
+        "clash_mode": "direct",
+        "server": "dns_dhcp"
+      },
+      {
         "query_type": [
           "A",
           "AAAA"
         ],
         "clash_mode": "direct",
-        "rule_set": "geosite-geolocation-cn",
+        "rule_set": [
+          "geoip-cn",
+          "geosite-apple",
+          "geosite-bahamut",
+          "geosite-category-media-cn",
+          "geosite-cn",
+          "geosite-geolocation-cn",
+          "geosite-netease",
+          "geosite-primevideo@cn"
+        ],
         "server": "dns_resolver"
       },
       {
@@ -51,12 +69,38 @@
           "AAAA"
         ],
         "clash_mode": "direct",
-        "rule_set": "geosite-geolocation-cn",
+        "rule_set": [
+          "geoip-cn",
+          "geosite-apple",
+          "geosite-bahamut",
+          "geosite-category-media-cn",
+          "geosite-cn",
+          "geosite-geolocation-cn",
+          "geosite-netease",
+          "geosite-primevideo@cn"
+        ],
         "server": "dns_direct"
       },
       {
         "clash_mode": "global",
-        "rule_set": "geosite-geolocation-!cn",
+        "rule_set": [
+          "geosite-bilibili@!cn",
+          "geosite-category-ai-chat-!cn",
+          "geosite-category-games-!cn",
+          "geosite-disney",
+          "geosite-dmm",
+          "geosite-geolocation-!cn",
+          "geosite-google-gemini",
+          "geosite-googlefcm",
+          "geosite-goproxy",
+          "geosite-hbo",
+          "geosite-microsoft",
+          "geosite-netflix",
+          "geosite-openai",
+          "geosite-primevideo",
+          "geosite-telegram",
+          "geosite-youtube"
+        ],
         "server": "dns_proxy"
       },
       {
@@ -64,11 +108,35 @@
           "A",
           "AAAA"
         ],
-        "rule_set": "geosite-geolocation-!cn",
+        "rule_set": [
+          "geosite-bilibili@!cn",
+          "geosite-category-ai-chat-!cn",
+          "geosite-category-games-!cn",
+          "geosite-disney",
+          "geosite-dmm",
+          "geosite-geolocation-!cn",
+          "geosite-google-gemini",
+          "geosite-googlefcm",
+          "geosite-goproxy",
+          "geosite-hbo",
+          "geosite-microsoft",
+          "geosite-netflix",
+          "geosite-openai",
+          "geosite-primevideo",
+          "geosite-telegram",
+          "geosite-youtube"
+        ],
         "server": "dns_fakeip"
       },
       {
-        "rule_set": "geosite-category-ads-all",
+        "rule_set": [
+          "geosite-easylist",
+          "geosite-disney@ads",
+          "geosite-geolocation-cn@ads",
+          "geosite-geolocation-!cn@ads",
+          "geosite-category-ai-chat-!cn@ads",
+          "geosite-category-ads-all"
+        ],
         "action": "predefined",
         "rcode": "NOERROR"
       }
@@ -753,7 +821,7 @@
     ],
     "final": "DIRECT",
     "auto_detect_interface": true,
-    "default_domain_resolver": "dns_dhcp"
+    "default_domain_resolver": "dns_direct"
   },
   "experimental": {
     "cache_file": {
@@ -765,7 +833,8 @@
       "external_controller": ":9999",
       "external_ui": "ui",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "🐟 漏网之鱼"
+      "external_ui_download_detour": "🚀 节点选择"
     }
   }
 }
+
