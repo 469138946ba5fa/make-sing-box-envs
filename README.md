@@ -35,8 +35,8 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 * 本脚本会自己检测桌面是否包含 $HOME/Desktop/sing-boxs 目录，如果存在则会自动拼接 uuid 作为新目录在桌面创建
   * 例如 $HOME/Desktop/sing-boxs-19AF2BFC-8B73-4678-992C-01BE6045C635
 * 脚本中的json模板文件使用加速源链接`gcore.jsdelivr.net`，效果不一定好，你需要多次启动测试，不行的话就替换其他加速的链接测试
-  * 另外需要说明的是，一开始我在DNS规则中配置了 dhcp 类型的 dns_dhcp 如果我没理解错的话应该借此可以使用本地dhcp配置下载规则，但是好像不稳定  
-  * 默认还是用 dns_direct 吧，目前远程下载规则文件没有太好的办法  
+  * 一开始我在DNS规则中配置了 dhcp 类型的 dns_dhcp 如果我没理解错的话应该借此可以使用本地dhcp配置下载规则，但是会自己拼接.lan当域名解析，这不扯蛋吗？  
+  * 目前远程下载规则文件没有太好的办法，后来我就想，以 dhcp 的 dns_dhcp 为基础路由创建 udp 的 dns_direct 来解析规则文件的链接，希望能下载顺利吧  
   ```plaintext
   fastly.jsdelivr.net
   testingcf.jsdelivr.net
