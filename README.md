@@ -44,8 +44,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 
 ## 💻 支持平台
 
-* 支持 **macOS**
-* 额支持 ARM 架构
+* 支持 **macOS** 额支持 ARM 架构（比如 macmini m4）  
 
 ---
 
@@ -122,6 +121,42 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 * 默认监听端口：
   * external-controller: 9999
   * http/socks5 代理：7890
+* json 模板文件中的30个规则文件使用参考，如果你有好的规则提议可以推荐给我，我不清楚这些文件是否有重复的可能
+  ```yaml
+  - 国内访问规则
+    - "geoip-cn"
+    - "geosite-apple"
+    - "geosite-bahamut"
+    - "geosite-category-media-cn"
+    - "geosite-cn"
+    - "geosite-geolocation-cn"
+    - "geosite-netease"
+    - "geosite-primevideo@cn"
+  - 国外访问规则
+    - "geosite-bilibili@!cn"
+    - "geosite-category-ai-chat-!cn"
+    - "geosite-category-games-!cn"
+    - "geosite-disney"
+    - "geosite-dmm"
+    - "geosite-geolocation-!cn"
+    - "geosite-google-gemini"
+    - "geosite-googlefcm"
+    - "geosite-goproxy"
+    - "geosite-hbo"
+    - "geosite-microsoft"
+    - "geosite-netflix"
+    - "geosite-openai"
+    - "geosite-primevideo"
+    - "geosite-telegram"
+    - "geosite-youtube"
+  - 拦截规则
+    - "geosite-easylist"
+    - "geosite-disney@ads"
+    - "geosite-geolocation-cn@ads"
+    - "geosite-geolocation-!cn@ads"
+    - "geosite-category-ai-chat-!cn@ads"
+    - "geosite-category-ads-all"
+  ```
 
 ---
 
