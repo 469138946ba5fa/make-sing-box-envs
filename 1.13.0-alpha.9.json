@@ -10,22 +10,16 @@
         "tag": "dns_dhcp"
       },
       {
-        "type": "udp",
-        "tag": "dns_resolver",
-        "server": "119.29.29.29"
-      },
-      {
-        "type": "h3",
+        "type": "tcp",
         "tag": "dns_direct",
-        "domain_resolver": "dns_resolver",
-        "server": "dns.alidns.com",
-        "path": "/dns-query"
+        "domain_resolver": "dns_dhcp",
+        "server": "223.5.5.5"
       },
       {
         "type": "tls",
         "tag": "dns_proxy",
         "detour": "🚀 节点选择",
-        "domain_resolver": "dns_resolver",
+        "domain_resolver": "dns_dhcp",
         "server": "1.1.1.1"
       },
       {
@@ -37,18 +31,14 @@
     ],
     "rules": [
       {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
         "domain_suffix": [
           ".lan",
           ".local",
           ".home"
-        ],
-        "clash_mode": "direct",
-        "server": "dns_dhcp"
-      },
-      {
-        "query_type": [
-          "A",
-          "AAAA"
         ],
         "clash_mode": "direct",
         "rule_set": [
@@ -61,12 +51,17 @@
           "geosite-netease",
           "geosite-primevideo@cn"
         ],
-        "server": "dns_resolver"
+        "server": "dns_dhcp"
       },
       {
         "query_type": [
           "A",
           "AAAA"
+        ],
+        "domain_suffix": [
+          ".lan",
+          ".local",
+          ".home"
         ],
         "clash_mode": "direct",
         "rule_set": [
