@@ -34,6 +34,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）
 * 为启用系统级转发，会尝试设置 `net.inet.ip.forwarding=1`，需要管理员权限
 * 本脚本会自己检测桌面是否包含 $HOME/Desktop/sing-boxs 目录，如果存在则会自动拼接 uuid 作为新目录在桌面创建
   * 例如 $HOME/Desktop/sing-boxs-19AF2BFC-8B73-4678-992C-01BE6045C635
+* 如果你觉得这个版本适配太老了，不够时髦，那你可以试试这个[激进版本适配](https://github.com/469138946ba5fa/make-sing-box-envs)
 
 ## 💻 支持平台
 
