@@ -6,15 +6,14 @@
   "dns": {
     "servers": [
       {
+        "type": "tcp",
+        "tag": "dns_direct",
+        "server": "114.114.114.114"
+      },
+      {
         "type": "udp",
         "tag": "dns_resolver",
         "server": "223.5.5.5"
-      },
-      {
-        "type": "h3",
-        "tag": "dns_direct",
-        "detour": "DIRECT",
-        "server": "dns.alidns.com"
       },
       {
         "type": "tls",
@@ -31,19 +30,6 @@
     "rules": [
       {
         "clash_mode": "direct",
-        "rule_set": [
-          "geoip-cn",
-          "geosite-apple",
-          "geosite-bahamut",
-          "geosite-category-media-cn",
-          "geosite-cn",
-          "geosite-geolocation-cn",
-          "geosite-netease",
-          "geosite-primevideo@cn"
-        ],
-        "server": "dns_resolver"
-      },
-      {
         "query_type": [
           "A",
           "AAAA"
@@ -58,7 +44,7 @@
           "geosite-netease",
           "geosite-primevideo@cn"
         ],
-        "server": "dns_direct"
+        "server": "dns_resolver"
       },
       {
         "clash_mode": "global",
@@ -120,7 +106,7 @@
         "rcode": "NOERROR"
       }
     ],
-    "final": "dns_direct",
+    "final": "dns_resolver",
     "strategy": "prefer_ipv4",
     "independent_cache": true
   },
@@ -812,8 +798,7 @@
       "external_controller": ":9999",
       "external_ui": "ui",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "♻️ 自动选择"
+      "external_ui_download_detour": "🚀 节点选择"
     }
   }
 }
-
