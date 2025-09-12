@@ -41,6 +41,12 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
   testingcf.jsdelivr.net
   test1.jsdelivr.net
   cdn.jsdelivr.net
+  # SagerNet/sing-geosite 一一对照
+  https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set
+  https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set
+  # SagerNet/sing-geosite 一一对照
+  https://gcore.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set
+  https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set
   ```
 * 如果你实在受不了因为规则无法下载全而反复手动重试启动，那你可以尝试旧版本，稳定简便[sing-box-1.10.0](https://github.com/469138946ba5fa/make-sing-box-envs/tree/sing-box-1.10.0)  
 
