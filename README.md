@@ -212,6 +212,7 @@ rm -rf $HOME/Desktop/sing-box*
 [github/SagerNet geosite.db](https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db)  
 [www.panlongid.com freenodeshare](https://www.panlongid.com/category/freenodeshare)  
 [github.com/Toperlock sing-box-subscribe](https://github.com/Toperlock/sing-box-subscribe)  
+[jsdelivr加速](https://www.jsdelivr.com)  
 
 ## 声明
 本项目仅作学习交流使用，学习各种姿势，不做任何违法行为。仅供交流学习使用，出现违法问题我负责不了，我也没能力负责，我没工作，也没收入，年纪也大了，就算灭了我也没用，我也没能力负责。
