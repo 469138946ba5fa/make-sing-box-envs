@@ -7,7 +7,7 @@
     "servers": [
       {
         "type": "dhcp",
-        "tag": "dns_direct"
+        "tag": "dns_dhcp"
       },
       {
         "type": "udp",
@@ -15,8 +15,17 @@
         "server": "223.5.5.5"
       },
       {
+        "type": "h3",
+        "tag": "dns_direct",
+        "detour": "DIRECT",
+        "domain_resolver": "dns_resolver",
+        "server": "dns.alidns.com",
+        "path": "/dns-query"
+      },
+      {
         "type": "tls",
         "tag": "dns_proxy",
+        "domain_resolver": "dns_resolver",
         "server": "1.1.1.1"
       },
       {
@@ -37,6 +46,15 @@
         "server": "dns_resolver"
       },
       {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "clash_mode": "direct",
+        "rule_set": "geosite-geolocation-cn",
+        "server": "dns_direct"
+      },
+      {
         "clash_mode": "global",
         "rule_set": "geosite-geolocation-!cn",
         "server": "dns_proxy"
@@ -55,7 +73,7 @@
         "rcode": "NOERROR"
       }
     ],
-    "final": "dns_resolver",
+    "final": "dns_direct",
     "strategy": "prefer_ipv4",
     "independent_cache": true
   },
@@ -735,7 +753,7 @@
     ],
     "final": "DIRECT",
     "auto_detect_interface": true,
-    "default_domain_resolver": "dns_direct"
+    "default_domain_resolver": "dns_dhcp"
   },
   "experimental": {
     "cache_file": {
@@ -747,8 +765,7 @@
       "external_controller": ":9999",
       "external_ui": "ui",
       "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_download_detour": "🚀 节点选择"
+      "external_ui_download_detour": "🐟 漏网之鱼"
     }
   }
 }
-
