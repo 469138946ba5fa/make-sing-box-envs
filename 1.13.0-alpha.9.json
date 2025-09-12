@@ -6,22 +6,22 @@
   "dns": {
     "servers": [
       {
-        "type": "https",
         "tag": "dns_resolver",
-        "detour": "DIRECT",
+        "type": "udp",
         "server": "223.5.5.5"
       },
       {
-        "type": "h3",
         "tag": "dns_direct",
-        "detour": "DIRECT",
-        "server": "dns.alidns.com"
+        "type": "h3",
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns_resolver",
+        "detour": "DIRECT"
       },
       {
-        "type": "tls",
         "tag": "dns_proxy",
-        "detour": "🚀 节点选择",
-        "server": "1.1.1.1"
+        "type": "tls",
+        "server": "1.1.1.1",
+        "domain_resolver": "dns_resolver"
       },
       {
         "type": "fakeip",
@@ -62,8 +62,9 @@
       },
       {
         "rule_set": "category-ads-all",
-        "server": "dns_block",
-        "disable_cache": true
+        "domain": [],
+        "action": "predefined",
+        "rcode": "NOERROR"
       }
     ],
     "final": "dns_direct",
@@ -101,10 +102,6 @@
     {
       "type": "direct",
       "tag": "DIRECT"
-    },
-    {
-      "type": "block",
-      "tag": "dns_block"
     },
     {
       "type": "selector",
@@ -767,3 +764,4 @@
     }
   }
 }
+
