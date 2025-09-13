@@ -38,13 +38,15 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
   * 一开始我在DNS规则中配置了 dhcp 类型的 dns_dhcp 如果我没理解错的话应该借此可以使用本地dhcp配置下载规则，但是会自己拼接.lan当域名解析，这不扯蛋吗？  
   * 目前远程下载规则文件没有太好的办法，后来我就想，以 dhcp 的 dns_dhcp 为基础路由创建 udp 的 dns_direct 来解析规则文件的链接，希望能下载顺利吧  
   ```plaintext
+  # 替代链接
   fastly.jsdelivr.net
   testingcf.jsdelivr.net
-  test1.jsdelivr.net
   cdn.jsdelivr.net
+  
   # SagerNet/sing-geosite 一一对照
   https://github.com/SagerNet/sing-geosite/raw/refs/heads/rule-set
   https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set
+  
   # SagerNet/sing-geosite 一一对照
   https://github.com/SagerNet/sing-geoip/raw/refs/heads/rule-set
   https://gcore.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set
@@ -134,36 +136,10 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
   ```yaml
   - 国内访问规则
     - "geoip-cn"
-    - "geosite-apple"
-    - "geosite-bahamut"
-    - "geosite-category-media-cn"
     - "geosite-cn"
-    - "geosite-geolocation-cn"
-    - "geosite-netease"
-    - "geosite-primevideo@cn"
   - 国外访问规则
-    - "geosite-bilibili@!cn"
-    - "geosite-category-ai-chat-!cn"
-    - "geosite-category-games-!cn"
-    - "geosite-disney"
-    - "geosite-dmm"
     - "geosite-geolocation-!cn"
-    - "geosite-google-gemini"
-    - "geosite-googlefcm"
-    - "geosite-goproxy"
-    - "geosite-hbo"
-    - "geosite-microsoft"
-    - "geosite-netflix"
-    - "geosite-openai"
-    - "geosite-primevideo"
-    - "geosite-telegram"
-    - "geosite-youtube"
   - 拦截规则
-    - "geosite-easylist"
-    - "geosite-disney@ads"
-    - "geosite-geolocation-cn@ads"
-    - "geosite-geolocation-!cn@ads"
-    - "geosite-category-ai-chat-!cn@ads"
     - "geosite-category-ads-all"
   ```
 
