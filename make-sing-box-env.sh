@@ -318,8 +318,8 @@ if [ -f '${SING_BOX_FILE}' ]; then
       # 2. 修改 urltest 对象
       | (.outbounds[] | select(.type=="urltest")) |=
           (.url = "http://cp.cloudflare.com/generate_204"
-           | .interval = "180s"
-           | .tolerance = 300)
+           | .interval = "3m0s"
+           | .tolerance = 30)
       # 3. 修改 experimental.clash_api 的 external_controller / external_ui（如果存在）
       | if .experimental? and .experimental.clash_api? then
           .experimental.clash_api.external_controller = ":9999"
