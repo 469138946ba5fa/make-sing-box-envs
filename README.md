@@ -93,6 +93,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
     ├── group_patterns.txt
     ├── sing-box
     ├── sing-box_config
+    │   ├── box.log
     │   ├── cache.db
     │   ├── geoip-cn.srs
     │   ├── geosite-category-ads-all.srs
