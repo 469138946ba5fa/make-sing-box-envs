@@ -60,7 +60,6 @@
       { "rule_set": "geosite-cn", "outbound": "直连" },
       { "rule_set": "geoip-cn", "outbound": "直连" },
       { "rule_set": "geosite-geolocation-!cn", "outbound": "代理" },
-      { "rule_set": "geosite-geolocation-!cn", "outbound": "代理" },
       { "ip_is_private": true, "outbound": "直连" }
     ],
     "rule_set": [
@@ -78,3 +77,4 @@
     "clash_api": { "external_controller": ":9999", "external_ui": "ui", "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip", "external_ui_download_detour": "代理" }
   }
 }
+
