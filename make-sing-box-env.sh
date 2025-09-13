@@ -111,17 +111,18 @@ BASE_FILE=${SING_BOX_DIR_PATH}'/base_config.json'
 SING_BOX_FILE=${SING_BOX_DIR_PATH}'/config.json'
 NODES=${SING_BOX_DIR_PATH}'/filtered_nodes.json'
 NODES_CONFIG=${SING_BOX_DIR_PATH}'/config_with_nodes.json'
+# other
+#游戏|游戏|Game|加速|Steam|Origin|🎮
+#流媒体|Netflix|奈飞|Media|NF|Disney|YouTube|流媒体|🎥
+#省流|省流|低倍率|大流量|0.1x|0.2x|📺
+#高级|专线|高级|IEPL|IPLC|AIA|CTM|CC|Premium|👍
 GROUPS_PATTERNS=$(cat <<'469138946ba5fa'
-🇯🇵 日本节点|日本|JP|Tokyo|东京|大阪
-🇺🇲 美国节点|美|US|United States|洛杉矶|芝加哥|硅谷|圣何塞
-🇸🇬 新加坡节点|坡|SG|Singapore|狮城
-🇭🇰 香港节点|港|HK|Hong Kong
-🇨🇳 台湾节点|台|TW|Taiwan|彰化|新北
-🇰🇷 韩国节点|韩|KR|Korea|首尔
-🎮 游戏节点|游戏|Game|加速|Steam|Origin
-🎥 流媒体解锁|Netflix|奈飞|Media|NF|Disney|YouTube|流媒体
-📺 省流节点|省流|低倍率|大流量|0.1x|0.2x
-👍 高级节点|专线|高级|IEPL|IPLC|AIA|CTM|CC|Premium
+日本|日本|JP|Tokyo|东京|大阪|🇯🇵
+美国|美|US|United States|洛杉矶|芝加哥|硅谷|圣何塞|🇺🇲
+新加坡|坡|SG|Singapore|狮城|🇸🇬
+香港|港|HK|Hong Kong|🇭🇰
+台湾|台|TW|Taiwan|彰化|新北|🇨🇳
+韩国|韩|KR|Korea|首尔|🇰🇷
 469138946ba5fa
 )
 BASE_SING_BOX_CONFIG_FIXSCRIPT=$(cat <<'469138946ba5fa'
@@ -233,10 +234,10 @@ jq --argjson new_nodes "\$(cat '$NODES')" '
 ' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 [ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
 
-# 将节点名全部插入到 `♻️ 自动选择`
+# 将节点名全部插入到 自动
 jq --argjson new_nodes "\$(cat '$NODES')" '
   .outbounds |= map(
-    if .tag == "♻️ 自动选择" and .type == "urltest" then
+    if .tag == "自动" and .type == "urltest" then
       .outbounds = (\$new_nodes | map(.tag))
     else
       .
@@ -244,10 +245,10 @@ jq --argjson new_nodes "\$(cat '$NODES')" '
   )
 ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 
-# 将节点名全部插入到 `🚀 手动切换`
+# 将节点名全部插入到 手动
 jq --argjson new_nodes "\$(cat '$NODES')" '
   .outbounds |= map(
-    if .tag == "🚀 手动切换" and .type == "selector" then
+    if .tag == "手动" and .type == "selector" then
       .outbounds = (\$new_nodes | map(.tag))
     else
       .
