@@ -250,26 +250,26 @@ if [ -f '${SING_BOX_FILE}' ]; then
             "network": "udp"
           }]
         end
-      # 5. 在 route.rules 里，凡是有 inbound 数组的，就追加 "dns-in"
-      | .route.rules |= map(
-          if .inbound? and (.inbound | type == "array") then
-            if any(.inbound[]; . == "dns-in") then
-              .
-            else
-              .inbound += ["dns-in"]
-            end
-          else
+    # 5. 在 route.rules 里追加 "dns-in"
+    | (.route.rules? |= map(
+        if .inbound? and (.inbound | type == "array") then
+          if any(.inbound[]; . == "dns-in") then
             .
-          end
-        )
-      # 6. 去掉 transport.path 里的 ? 之后部分
-      | (.outbounds |= map(
-          if .transport?.path? then
-            .transport.path |= sub("\\?.*"; "")
           else
-            .
+            .inbound += ["dns-in"]
           end
-        ))
+        else
+          .
+        end
+      ))
+    # 6. 去掉 transport.path 里的 ? 之后部分
+    | (.outbounds |= map(
+        if .transport?.path? then
+          .transport.path |= sub("\\?.*"; "")
+        else
+          .
+        end
+      ))
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
