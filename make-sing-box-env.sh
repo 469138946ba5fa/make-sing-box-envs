@@ -361,7 +361,7 @@ if [ -f '${SING_BOX_FILE}' ]; then
     # 6. 去掉 transport.path 里的 ? 之后部分
     | (.outbounds |= map(
         if .transport?.path? then
-          .transport.path |= sub("\\?.*"; "")
+          .transport.path |= sub("\\\\?.*"; "")
         else
           .
         end
