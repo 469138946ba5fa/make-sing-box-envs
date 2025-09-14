@@ -358,6 +358,14 @@ if [ -f '${SING_BOX_FILE}' ]; then
           .
         end
       )
+    # 6. 去掉 transport.path 里的 ? 之后部分
+    | (.outbounds |= map(
+        if .transport?.path? then
+          .transport.path |= sub("\\?.*"; "")
+        else
+          .
+        end
+      ))
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
