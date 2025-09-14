@@ -222,8 +222,8 @@ if [ -f '${SING_BOX_FILE}' ]; then
       # 2. 修改 urltest 对象
       | (.outbounds[] | select(.type=="urltest")) |=
           (.url = "http://cp.cloudflare.com/generate_204"
-           | .interval = "180s"
-           | .tolerance = 300)
+           | .interval = "3m0s"
+           | .tolerance = 30)
       # 3. 修改 experimental.clash_api 的 external_controller / external_ui（如果存在）
       | if .experimental? and .experimental.clash_api? then
           .experimental.clash_api.external_controller = ":9999"
@@ -250,6 +250,26 @@ if [ -f '${SING_BOX_FILE}' ]; then
             "network": "udp"
           }]
         end
+    # 5. 在 route.rules 里，凡是有 inbound 数组的，就追加 "dns-in"
+    | .route.rules |= map(
+        if .inbound? and (.inbound | type == "array") then
+          if any(.inbound[]; . == "dns-in") then
+            .
+          else
+            .inbound += ["dns-in"]
+          end
+        else
+          .
+        end
+      )
+    # 6. 去掉 transport.path 里的 ? 之后部分
+    | (.outbounds |= map(
+        if .transport?.path? then
+          .transport.path |= sub("\\?.*"; "")
+        else
+          .
+        end
+      ))
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
