@@ -85,7 +85,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 
    ```plaintext
    $HOME/Desktop/sing-boxs
-    ├── 1.13.0-alpha.8.json
+    ├── 1.13.0-alpha.15.json
     ├── config_with_nodes.json
     ├── config.json
     ├── config.json.bak
@@ -100,7 +100,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
     │   ├── geosite-geolocation-!cn.srs
     │   ├── ui
     │   └── ui.zip
-    ├── sing-box-1.13.0-alpha.8-darwin-arm64.tar.gz
+    ├── sing-box-1.13.0-alpha.15-darwin-arm64.tar.gz
     ├── sing-box-start.sh
     ├── subs-fix.py
     └── temp_config.json
@@ -133,7 +133,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 * 默认监听端口：
   * external-controller: 9999
   * http/socks5 代理：7890
-* json 模板文件中的30个规则文件使用参考，如果你有好的规则提议可以推荐给我，我不清楚这些文件是否有重复的可能
+* json 模板文件中的4个规则文件使用参考，如果你有好的规则提议可以推荐给我，我不清楚这些文件是否有重复的可能
   ```yaml
   - 国内访问规则
     - "geoip-cn"
@@ -222,7 +222,7 @@ echo "终止 Sing-Box 进程（如有）..."
 sudo pkill -f 'sing-box -D' || echo "未找到 Sing-Box 进程，跳过。"
 
 # 4. 删除整个代理目录
-rm -rf $HOME/Desktop/sing-box*
+rm -rf $HOME/Desktop/sing-boxs*
 ```
 ## 许可证
 本项目采用 [MIT License](LICENSE) 许可。
