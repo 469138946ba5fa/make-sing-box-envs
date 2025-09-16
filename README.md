@@ -190,7 +190,7 @@ echo "终止 Sing-Box 进程（如有）..."
 sudo pkill -f 'sing-box -D' || echo "未找到 Sing-Box 进程，跳过。"
 
 # 4. 删除整个代理目录
-rm -rf $HOME/Desktop/sing-box*
+rm -rf $HOME/Desktop/sing-boxs*
 ```
 ## 许可证
 本项目采用 [MIT License](LICENSE) 许可。
