@@ -189,7 +189,10 @@ sudo pfctl -e
 
 # 2. 实时禁用 IP 转发
 echo "禁用 IP 转发..."
+# IPv4 关闭
 sudo sysctl -w net.inet.ip.forwarding=0
+# IPv6 关闭
+sudo sysctl -w net.inet6.ip6.forwarding=0
 
 # 3. 终止 sing-box 进程
 echo "终止 Sing-Box 进程（如有）..."
