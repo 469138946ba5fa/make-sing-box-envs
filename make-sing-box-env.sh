@@ -15,7 +15,7 @@ echo "操作系统是 macOS"
 # 检查 brew 是否已安装
 if ! command -v brew >/dev/null 2>&1; then
   echo "未检测到 Homebrew，正在安装..."
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
   # 配置环境变量（适配 arm64）
   echo '正在设置环境变量...'
