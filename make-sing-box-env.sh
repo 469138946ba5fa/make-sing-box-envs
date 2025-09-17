@@ -377,7 +377,7 @@ cp -fv '${SING_BOX_FILE}' '${SING_BOX_FILE}.bak'
 # 每个人的系统环境如此的不同
 # 假如你原本就有python环境，而我如果写了一个脚本安装python环境，那一定会破坏你原本的python环境
 # 所以python环境这块，你自己搭建好吗？
-if python '/Users/af5ab649831964/Desktop/sing-boxs/subs-fix.py' '${SING_BOX_FILE}.bak' '${SING_BOX_FILE}'; then
+if python '${BASE_CONFIG_FIXSCRIPT_FILE}' '${SING_BOX_FILE}.bak' '${SING_BOX_FILE}'; then
   echo ok
 else
   cp -fv '${SING_BOX_FILE}.bak' '${SING_BOX_FILE}'
