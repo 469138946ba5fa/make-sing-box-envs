@@ -390,14 +390,22 @@ pf_nat_udp_tcp() {
 pf_nat_udp_tcp
 
 # 开启 IP 转发避免反复写入
+# IPv4 
 NAT_IP='net.inet.ip.forwarding=1'
 SYS_CONF='/etc/sysctl.conf'
 if ! grep -qF "\$NAT_IP" "\$SYS_CONF"; then
   echo "\$NAT_IP" | sudo tee -a "\$SYS_CONF"
 fi
+# IPv6
+NAT_IP='net.inet6.ip6.forwarding=0'
+if ! grep -qF "\$NAT_IP" "\$SYS_CONF"; then
+  echo "\$NAT_IP" | sudo tee -a "\$SYS_CONF"
+fi
 
-# 关闭则 sudo sysctl -w net.inet.ip.forwarding=0
+# IPv4 关闭则 sudo sysctl -w net.inet.ip.forwarding=0
 sudo sysctl -w net.inet.ip.forwarding=1
+# IPv6 关闭则 sudo sysctl -w net.inet6.ip6.forwarding=0
+sudo sysctl -w net.inet6.ip6.forwarding=1
 
 # 刷新 DNS 缓存
 sudo dscacheutil -flushcache
