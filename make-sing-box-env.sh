@@ -493,7 +493,7 @@ if ! grep -qF "\$NAT_IP" "\$SYS_CONF"; then
   echo "\$NAT_IP" | sudo tee -a "\$SYS_CONF"
 fi
 # IPv6
-NAT_IP='net.inet6.ip6.forwarding=0'
+NAT_IP='net.inet6.ip6.forwarding=1'
 if ! grep -qF "\$NAT_IP" "\$SYS_CONF"; then
   echo "\$NAT_IP" | sudo tee -a "\$SYS_CONF"
 fi
