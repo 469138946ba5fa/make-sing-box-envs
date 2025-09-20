@@ -230,7 +230,7 @@ jq '[.outbounds[] | select(.server != null and .server != "")]' '$TMP_FILE' > '$
 
 # 将节点全部插入到 `.outbounds`
 jq --slurpfile new_nodes '$NODES' '
-  .outbounds += \$new_nodes
+  .outbounds += \$new_nodes[0]
 ' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 [ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
 
@@ -238,7 +238,7 @@ jq --slurpfile new_nodes '$NODES' '
 jq --slurpfile new_nodes '$NODES' '
   .outbounds |= map(
     if .tag == "自动" and .type == "urltest" then
-      .outbounds = (\$new_nodes | map(.tag))
+      .outbounds = (\$new_nodes[0] | map(.tag))
     else
       .
     end
@@ -249,7 +249,7 @@ jq --slurpfile new_nodes '$NODES' '
 jq --slurpfile new_nodes '$NODES' '
   .outbounds |= map(
     if .tag == "手动" and .type == "selector" then
-      .outbounds = (\$new_nodes | map(.tag))
+      .outbounds = (\$new_nodes[0] | map(.tag))
     else
       .
     end
