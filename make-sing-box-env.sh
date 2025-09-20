@@ -229,13 +229,13 @@ jq '[.outbounds[] | select(.server != null and .server != "")]' '$TMP_FILE' > '$
 [ ! -f "$NODES" ] && echo "全节点文件不存在：$NODES" && exit 1
 
 # 将节点全部插入到 `.outbounds`
-jq --argjson new_nodes "\$(cat '$NODES')" '
+jq --slurpfile new_nodes "'$NODES'" '
   .outbounds += \$new_nodes
 ' '$SING_BOX_CONFIG_TEMPLATES_FILE' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 [ ! -f "$NODES_CONFIG" ] && echo "节点配置文件不存在：$NODES_CONFIG" && exit 1
 
 # 将节点名全部插入到 自动
-jq --argjson new_nodes "\$(cat '$NODES')" '
+jq --slurpfile new_nodes "'$NODES'" '
   .outbounds |= map(
     if .tag == "自动" and .type == "urltest" then
       .outbounds = (\$new_nodes | map(.tag))
@@ -246,7 +246,7 @@ jq --argjson new_nodes "\$(cat '$NODES')" '
 ' '$NODES_CONFIG' > config_tmp.json && mv config_tmp.json '$NODES_CONFIG'
 
 # 将节点名全部插入到 手动
-jq --argjson new_nodes "\$(cat '$NODES')" '
+jq --slurpfile new_nodes "'$NODES'" '
   .outbounds |= map(
     if .tag == "手动" and .type == "selector" then
       .outbounds = (\$new_nodes | map(.tag))
