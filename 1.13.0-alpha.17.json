@@ -3,42 +3,50 @@
   "dns": {
     "servers": [
       { "type": "dhcp", "tag": "解析DHCP" },
-      { "type": "udp", "tag": "解析DHCP_UDP", "domain_resolver": "解析DHCP", "server": "223.5.5.5" },
-      {
-        "type": "hosts",
+      { 
+        "type": "hosts", 
         "tag": "解析HOSTS",
         "predefined": {
-            "dns.google":["8.8.8.8","8.8.4.4","2001:4860:4860::8888","2001:4860:4860::8844"],
-            "dns.alidns.com":["223.5.5.5","223.6.6.6","2400:3200::1","2400:3200:baba::1"],
-            "one.one.one.one":["1.1.1.1","1.0.0.1","2606:4700:4700::1111","2606:4700:4700::1001"],
-            "1dot1dot1dot1.cloudflare-dns.com":["1.1.1.1","1.0.0.1","2606:4700:4700::1111","2606:4700:4700::1001"],
-            "cloudflare-dns.com":["104.16.249.249","104.16.248.249","2606:4700::6810:f8f9","2606:4700::6810:f9f9"],
-            "dns.cloudflare.com":["104.16.132.229","104.16.133.229","2606:4700::6810:84e5","2606:4700::6810:85e5"],
-            "dot.pub":["1.12.12.12","120.53.53.53"],
-            "dns.quad9.net":["9.9.9.9","149.112.112.112","2620:fe::fe","2620:fe::9"],
-            "dns.yandex.net":["77.88.8.8","77.88.8.1","2a02:6b8::feed:0ff","2a02:6b8:0:1::feed:0ff"],
-            "dns.sb":["185.222.222.222","2a09::"],
-            "dns.umbrella.com":["208.67.220.220","208.67.222.222","2620:119:35::35","2620:119:53::53"],
-            "dns.sse.cisco.com":["208.67.220.220","208.67.222.222","2620:119:35::35","2620:119:53::53"],
-            "engage.cloudflareclient.com":["162.159.192.1","2606:4700:d0::a29f:c001"]
+        "dns.google": [ "8.8.8.8", "8.8.4.4", "2001:4860:4860::8888", "2001:4860:4860::8844" ],
+        "dns.alidns.com": [ "223.5.5.5", "223.6.6.6", "2400:3200::1", "2400:3200:baba::1" ],
+        "one.one.one.one": [ "1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001" ],
+        "1dot1dot1dot1.cloudflare-dns.com": [ "1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001" ],
+        "cloudflare-dns.com": [ "104.16.249.249", "104.16.248.249", "2606:4700::6810:f8f9", "2606:4700::6810:f9f9" ],
+        "dns.cloudflare.com": [ "104.16.132.229", "104.16.133.229", "2606:4700::6810:84e5", "2606:4700::6810:85e5" ],
+        "dot.pub": [ "1.12.12.12", "120.53.53.53" ],
+        "doh.pub": [ "1.12.12.12", "120.53.53.53" ],
+        "dns.quad9.net": [ "9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::9" ],
+        "dns.yandex.net": [ "77.88.8.8", "77.88.8.1", "2a02:6b8::feed:0ff", "2a02:6b8:0:1::feed:0ff" ],
+        "dns.sb": [ "185.222.222.222", "2a09::" ],
+        "dns.umbrella.com": [ "208.67.220.220", "208.67.222.222", "2620:119:35::35", "2620:119:53::53" ],
+        "dns.sse.cisco.com": [ "208.67.220.220", "208.67.222.222", "2620:119:35::35", "2620:119:53::53" ],
+        "engage.cloudflareclient.com": [ "162.159.192.1", "2606:4700:d0::a29f:c001" ]
         }
       },
+      { "type": "udp", "tag": "解析223.5.5.5", "domain_resolver": "解析DHCP", "server": "223.5.5.5" },
+      { "type": "https", "tag": "解析CLOUDFLARE-DNS", "domain_resolver": "解析HOSTS", "server": "cloudflare-dns.com", "path": "/dns-query", "detour": "代理" },
       { "type": "https", "tag": "解析ALIDNS", "domain_resolver": "解析HOSTS", "server": "dns.alidns.com", "path": "/dns-query" },
       { "type": "fakeip", "tag": "解析FAKEIP", "inet4_range": "198.18.0.0/15", "inet6_range": "fd00::/8" }
     ],
     "rules": [
+      { "clash_mode": "global", "server": "解析CLOUDFLARE-DNS" },
+      { "clash_mode": "direct", "server": "解析ALIDNS" },
       { "rule_set": "geosite-category-ads-all", "action": "predefined", "rcode": "NOERROR" },
-      { "rule_set": "geoip-cn", "server": "解析ALIDNS" },
-      { "rule_set": "geosite-geolocation-!cn", "server": "解析FAKEIP" }
+      { "domain": [ "googleapis.cn", "gstatic.com" ], "domain_suffix": [ ".googleapis.cn", ".gstatic.com" ], "server": "解析CLOUDFLARE-DNS" },
+      { "rule_set": [ "geosite-private" ], "server": "解析ALIDNS" },
+      { "domain": [ "alidns.com", "doh.pub", "dot.pub", "360.cn", "onedns.net" ], "domain_suffix": [ ".alidns.com", ".doh.pub", ".dot.pub", ".360.cn", ".onedns.net" ], "server": "解析ALIDNS" },
+      { "rule_set": [ "geosite-cn" ], "server": "解析ALIDNS" },
+      { "ip_accept_any": true, "server": "解析HOSTS" },
+      { "rule_set": "geosite-geolocation-!cn", "server": "解析FAKEIP" },
+      { "query_type": [ 64, 65 ], "action": "predefined", "rcode": "NOTIMP" }
     ],
-    "final": "解析ALIDNS",
-    "strategy": "prefer_ipv4",
+    "final": "解析CLOUDFLARE-DNS",
     "independent_cache": true
   },
   "ntp": { "enabled": true, "interval": "3m0s", "server": "time.apple.com", "server_port": 123},
   "inbounds": [
     { "type": "mixed", "tag": "mixed-in", "listen": "0.0.0.0", "listen_port": 7890 },
-    { "type": "tun", "tag": "tun-in", "address": ["172.19.0.1/30","fdfe:dcba:9876::1/126"], "auto_route": true, "strict_route": true, "stack": "mixed", "sniff": true }
+    { "type": "tun", "tag": "tun-in", "address": ["172.19.0.1/30","fdfe:dcba:9876::1/126"], "auto_route": true, "strict_route": false, "stack": "mixed", "sniff": true }
   ],
   "outbounds": [
     { "type": "direct", "tag": "直连" },
@@ -55,31 +63,38 @@
   ],
   "route": {
     "rules": [
-      { "rule_set": "geosite-category-ads-all", "action": "reject" },
       { "inbound": [ "tun-in", "mixed-in" ], "action": "sniff" },
-      { "type": "logical", "mode": "or", "rules": [ { "port": 53 }, { "protocol": "dns" } ], "action": "hijack-dns" },
+      { "type": "logical", "mode": "or", "rules": [ { "port": 53 }, { "port": 853 }, { "protocol": "dns" },{ "domain_suffix": ["dns.google", "cloudflare-dns.com", "one.one.one.one", "dns.alidns.com"] } ], "action": "hijack-dns" },
+      { "ip_is_private": true, "outbound": "直连" },
+      { "rule_set": [ "geosite-private" ], "outbound": "直连" },
+      { "ip_cidr": [ "223.5.5.5", "223.6.6.6", "2400:3200::1", "2400:3200:baba::1", "119.29.29.29", "1.12.12.12", "120.53.53.53", "2402:4e00::", "2402:4e00:1::", "180.76.76.76", "2400:da00::6666", "114.114.114.114", "114.114.115.115", "114.114.114.119", "114.114.115.119", "114.114.114.110", "114.114.115.110", "180.184.1.1", "180.184.2.2", "101.226.4.6", "218.30.118.6", "123.125.81.6", "140.207.198.6", "1.2.4.8", "210.2.4.8", "52.80.66.66", "117.50.22.22", "2400:7fc0:849e:200::4", "2404:c2c0:85d8:901::4", "117.50.10.10", "52.80.52.52", "2400:7fc0:849e:200::8", "2404:c2c0:85d8:901::8", "117.50.60.30", "52.80.60.30" ], "outbound": "直连" },
+      { "domain": [ "alidns.com", "doh.pub", "dot.pub", "360.cn", "onedns.net" ], "domain_suffix": [ ".alidns.com", ".doh.pub", ".dot.pub", ".360.cn", ".onedns.net" ], "outbound": "直连" },
+      { "rule_set": "geosite-category-ads-all", "action": "reject" },
+      { "domain": [ "googleapis.cn", "gstatic.com", "youtube.com", "youjizz.com", "chatgpt.com", "google.com" ], "domain_suffix": [ ".googleapis.cn", ".gstatic.com" ], "outbound": "代理" },
+      { "rule_set": [ "geoip-cn" ], "outbound": "直连" },
+      { "rule_set": [ "geosite-cn" ], "outbound": "直连" },
+      { "rule_set": [ "geosite-geolocation-!cn" ], "outbound": "代理" },
+      { "type": "logical", "mode": "or", "rules": [ { "protocol": "stun" }, { "protocol": "udp" }, { "protocol": "quic" } ], "outbound": "代理" }, 
+      { "network": ["udp"], "port": [443], "action": "reject" },
       { "clash_mode": "direct", "outbound": "直连" },
-      { "clash_mode": "proxy", "outbound": "代理" },
-      { "rule_set": "geosite-cn", "outbound": "直连" },
-      { "rule_set": "geosite-geolocation-!cn", "outbound": "代理" },
-      { "network": "udp", "port": 443, "outbound": "代理" },
-      { "domain": ["youtube.com", "youjizz.com", "chatgpt.com", "google.com"], "outbound": "代理" },
-      { "ip_is_private": true, "outbound": "直连" }
+      { "clash_mode": "global", "outbound": "代理" }
     ],
     "rule_set": [
       { "type": "remote", "tag": "geoip-cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-cn.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
+      { "type": "remote", "tag": "geosite-private", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-private.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
       { "type": "remote", "tag": "geosite-cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
       { "type": "remote", "tag": "geosite-geolocation-!cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
       { "type": "remote", "tag": "geosite-category-ads-all", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs", "download_detour": "直连", "update_interval": "24h0m0s" }
     ],
     "auto_detect_interface": true,
     "final": "直连",
-    "default_domain_resolver": "解析ALIDNS"
+    "default_domain_resolver": {
+      "server": "解析ALIDNS",
+      "strategy": ""
+    }
   },
   "experimental": {
     "cache_file": { "enabled": true, "store_fakeip": true, "store_rdrc": true },
     "clash_api": { "external_controller": ":9999", "external_ui": "ui", "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip", "external_ui_download_detour": "代理" }
   }
 }
-
-
