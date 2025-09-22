@@ -60,6 +60,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
   https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
   https://gh-proxy.com/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
   ```
+* Android 的 私有 DNS（Private DNS） 默认在 自动 状态时，会尝试使用 DoT/DoH（比如 dns.google, dns.quad9.net），这就绕过了你在局域网里用 sing-box 做的 DNS 劫持。关闭后（或者手动设置为 关），系统会退回到 DHCP/手动指定的 DNS 服务器，这样才能确保流量乖乖走你在路由器 / sing-box 上设置的 DNS。我尝试过pf拦截853，但是我失败了，我觉得sing-box配置无力解决这个问题，只能从安卓手机本身的设置关闭。
 * 如果你实在受不了因为规则无法下载全而反复手动重试启动，那你可以尝试旧版本，稳定简便[sing-box-1.10.0](https://github.com/469138946ba5fa/make-sing-box-envs/tree/sing-box-1.10.0)  
 
 ## 💻 支持平台
