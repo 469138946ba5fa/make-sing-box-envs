@@ -95,7 +95,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
 
    ```plaintext
    $HOME/Desktop/sing-boxs
-    ├── 1.13.0-alpha.17.json
+    ├── 1.13.0-alpha.18.json
     ├── config_with_nodes.json
     ├── config.json
     ├── config.json.bak
@@ -110,7 +110,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
     │   ├── geosite-geolocation-!cn.srs
     │   ├── ui
     │   └── ui.zip
-    ├── sing-box-1.13.0-alpha.17-darwin-arm64.tar.gz
+    ├── sing-box-1.13.0-alpha.18-darwin-arm64.tar.gz
     ├── sing-box-start.sh
     ├── subs-fix.py
     └── temp_config.json
