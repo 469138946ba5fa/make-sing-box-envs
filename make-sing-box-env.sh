@@ -434,14 +434,14 @@ pf_nat_udp_tcp() {
   # 写入 anchor 规则
   cat <<469138946ba5fa_1 | sudo tee \$ANCHOR_FILE
 # NAT 出口伪装，保证 Mac 自身流量出外网正常
-nat on \$IFACE from any to any -> (\$IFACE)
+#nat on \$IFACE from any to any -> (\$IFACE)
 
 # DNS 劫持（如果设备没手动设置 DNS）
 #rdr pass on \$IFACE proto {tcp udp} from any to any port 53 -> 172.19.0.1 port 53
-rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
+#rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 
 # 阻断 DoT
-block out on \$IFACE proto tcp from any to any port 853
+#block out on \$IFACE proto tcp from any to any port 853
 
 # （可选）阻断常见 DoH IP
 #table <doh> persist { 1.1.1.1, 1.0.0.1, 8.8.8.8, 8.8.4.4 }
@@ -453,7 +453,7 @@ block out on \$IFACE proto tcp from any to any port 853
 # TCP 流量转发到 sing-box 7890
 #rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1 port 7890
 # TCP/UDP 流量转发到 sing-box TUN
-rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
+#rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1
 # TCP 流量转发到 sing-box TUN
 #rdr pass on \$IFACE proto tcp from any to any -> 172.19.0.1
 469138946ba5fa_1
