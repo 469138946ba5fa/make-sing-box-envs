@@ -440,6 +440,14 @@ nat on \$IFACE from any to any -> (\$IFACE)
 #rdr pass on \$IFACE proto {tcp udp} from any to any port 53 -> 172.19.0.1 port 53
 rdr pass on \$IFACE proto udp from any to any port 53 -> 172.19.0.1 port 53
 
+# 阻断 DoT
+block out on \$IFACE proto tcp from any to any port 853
+
+# （可选）阻断常见 DoH IP
+#table <doh> persist { 1.1.1.1, 1.0.0.1, 8.8.8.8, 8.8.4.4 }
+#block out on \$IFACE from any to <doh> proto tcp to port 443
+#block out on \$IFACE from any to <doh> proto udp to port 443
+
 # TCP/UDP 流量转发到 sing-box 7890
 #rdr pass on \$IFACE proto {tcp udp} from any to any -> 172.19.0.1 port 7890
 # TCP 流量转发到 sing-box 7890
