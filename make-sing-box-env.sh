@@ -123,6 +123,7 @@ GROUPS_PATTERNS=$(cat <<'469138946ba5fa'
 香港|港|HK|Hong Kong|🇭🇰
 台湾|台|TW|Taiwan|彰化|新北|🇨🇳
 韩国|韩|KR|Korea|首尔|🇰🇷
+智能|disney|openai|gemini|🤖
 469138946ba5fa
 )
 BASE_SING_BOX_CONFIG_FIXSCRIPT=$(cat <<'469138946ba5fa'
