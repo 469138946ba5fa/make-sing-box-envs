@@ -150,6 +150,7 @@ Sing-Box 一键搭建配置脚本（macOS arm64）可用做网关代理
     - "geosite-private"
     - "geosite-cn"
   - 国外访问规则
+    - "geosite-openai"
     - "geosite-geolocation-!cn"
   - 拦截规则
     - "geosite-category-ads-all"
