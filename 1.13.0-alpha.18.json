@@ -28,17 +28,18 @@
       },
       { "type": "h3", "tag": "解析ALIDNS", "domain_resolver": "解析HOSTS", "server": "dns.alidns.com", "path": "/dns-query" },
       { "type": "https", "tag": "解析GOOGLEDNS", "detour": "代理", "domain_resolver": "解析HOSTS", "server": "dns.google", "path": "/dns-query" },
-      { "type": "https", "tag": "解析CLOUDFLARE-DNS", "domain_resolver": "解析HOSTS", "server": "cloudflare-dns.com", "path": "/dns-query", "detour": "代理" },
+      { "type": "https", "tag": "解析CLOUDFLARE-DNS", "detour": "代理", "domain_resolver": "解析HOSTS", "server": "cloudflare-dns.com", "path": "/dns-query" },
       { "type": "fakeip", "tag": "解析FAKEIP", "inet4_range": "198.18.0.0/15", "inet6_range": "fd00::/8" }
     ],
     "rules": [
       { "rule_set": [ "geosite-private" ], "server": "解析ALIDNS" },
       { "rule_set": "geosite-category-ads-all", "action": "predefined", "rcode": "NXDOMAIN" },
-      { "rule_set": "geosite-geolocation-!cn", "server": "解析FAKEIP" },
+      { "rule_set": [ "geoip-cn" ], "server": "解析ALIDNS" },
+      { "rule_set": [ "geosite-geolocation-!cn" ] , "server": "解析CLOUDFLARE-DNS" },
       { "query_type": [ "SVCB", "HTTPS" ], "action": "predefined", "rcode": "NOTIMP" },
       { "ip_accept_any": true, "server": "解析HOSTS" }
     ],
-    "final": "解析ALIDNS",
+    "final": "解析CLOUDFLARE-DNS",
     "independent_cache": true
   },
   "ntp": { "enabled": true, "interval": "3m0s", "server": "time.apple.com", "server_port": 123},
@@ -70,6 +71,7 @@
       { "rule_set": "geosite-category-ads-all", "action": "reject" },
       { "rule_set": [ "geoip-cn" ], "outbound": "直连" },
       { "rule_set": [ "geosite-cn" ], "outbound": "直连" },
+      { "rule_set": [ "geosite-openai" ] , "outbound": "智能" },
       { "rule_set": [ "geosite-geolocation-!cn" ], "outbound": "代理" },
       { "domain_suffix": [ "alidns.com", "doh.pub", "dot.pub", "360.cn", "onedns.net" ], "outbound": "直连" },
       { "type": "logical", "mode": "or", "rules": [ { "protocol": "stun" }, { "protocol": "udp" }, { "protocol": "quic" } ], "outbound": "代理" },
@@ -80,7 +82,8 @@
       { "type": "remote", "tag": "geosite-private", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-private.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
       { "type": "remote", "tag": "geosite-cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
       { "type": "remote", "tag": "geosite-geolocation-!cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
-      { "type": "remote", "tag": "geosite-category-ads-all", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs", "download_detour": "直连", "update_interval": "24h0m0s" }
+      { "type": "remote", "tag": "geosite-category-ads-all", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs", "download_detour": "直连", "update_interval": "24h0m0s" },
+      { "type": "remote", "tag": "geosite-openai", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-openai.srs", "download_detour": "直连", "update_interval": "24h0m0s" }
     ],
     "auto_detect_interface": true,
     "final": "代理",
