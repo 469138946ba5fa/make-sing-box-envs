@@ -52,7 +52,7 @@
     { "type": "selector", "tag": "代理", "outbounds": ["自动","手动","直连","台湾","新加坡","日本","美国","韩国","香港"] },
     { "type": "urltest", "tag": "自动", "outbounds": ["直连"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
     { "type": "selector", "tag": "手动", "outbounds": ["直连"] },
-    { "type": "selector", "tag": "智能", "outbounds": ["代理","自动","手动","直连","台湾","新加坡","日本","美国","韩国","香港"] },
+    { "type": "selector", "tag": "智能", "outbounds": ["直连"] },
     { "type": "urltest", "tag": "台湾", "outbounds": ["直连"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
     { "type": "urltest", "tag": "新加坡", "outbounds": ["直连"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
     { "type": "urltest", "tag": "日本", "outbounds": ["直连"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
@@ -94,4 +94,5 @@
     "clash_api": { "external_controller": ":9999", "external_ui": "ui", "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip", "external_ui_download_detour": "代理" }
   }
 }
+
 
