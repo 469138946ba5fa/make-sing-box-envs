@@ -281,14 +281,14 @@ if [ -f '${SING_BOX_FILE}' ]; then
     #)
     # 8. 修复 tuic 节点
     | .outbounds |= map(
-      if .type == "tuic" then
-        .uuid |= gsub("%3A"; ":")
-        | .uuid |= sub("@\\\\[.*\$"; "")
-        | .server_port |= (if type=="string" then tonumber else . end)
-      else
-        .
-      end
-    )
+        if .type == "tuic" then
+          .uuid |= sub("(%3A|:).*"; "")
+          | .uuid |= sub("@\\\\[.*\$"; "")
+          | .server_port |= (if type=="string" then tonumber else . end)
+        else
+          .
+        end
+      )
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
