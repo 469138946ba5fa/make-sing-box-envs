@@ -270,25 +270,25 @@ if [ -f '${SING_BOX_FILE}' ]; then
           .
         end
       ))
-      ## 7. 删除 tun-in inbound，并同步清理 route.rules 里的引用
-      #| .inbounds |= map(select(.tag != "tun-in"))
-      #| .route.rules |= map(
-      #    if .inbound? and (.inbound | type == "array") then
-      #      .inbound |= map(select(. != "tun-in"))
-      #    else
-      #      .
-      #    end
-      #)
-      # 8. 修复 tuic 节点
-      .outbounds |= map(
-        if .type == "tuic" then
-          .uuid |= gsub("%3A"; ":")
-          | .uuid |= sub("@\\\\\\[.*\$"; "")
-          | .server_port |= (if type=="string" then tonumber else . end)
-        else
-          .
-        end
-      )
+    ## 7. 删除 tun-in inbound，并同步清理 route.rules 里的引用
+    #| .inbounds |= map(select(.tag != "tun-in"))
+    #| .route.rules |= map(
+    #    if .inbound? and (.inbound | type == "array") then
+    #      .inbound |= map(select(. != "tun-in"))
+    #    else
+    #      .
+    #    end
+    #)
+    # 8. 修复 tuic 节点
+    | .outbounds |= map(
+      if .type == "tuic" then
+        .uuid |= gsub("%3A"; ":")
+        | .uuid |= sub("@\\\\[.*\$"; "")
+        | .server_port |= (if type=="string" then tonumber else . end)
+      else
+        .
+      end
+    )
     ' '${SING_BOX_FILE}' > '${SING_BOX_FILE}.tmp' && mv '${SING_BOX_FILE}.tmp' '${SING_BOX_FILE}'
 else
   echo "Error: ${SING_BOX_FILE} is not exist. Exiting."
