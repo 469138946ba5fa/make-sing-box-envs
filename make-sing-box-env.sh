@@ -376,11 +376,11 @@ if [ -f '${SING_BOX_FILE}' ]; then
       #      .
       #    end
       #)
-      # 8.修复 tuic 节点
-      | .outbounds |= map(
+      # 8. 修复 tuic 节点
+      .outbounds |= map(
         if .type == "tuic" then
           .uuid |= gsub("%3A"; ":")
-          | .uuid |= sub("@\\[.*$"; "")
+          | .uuid |= sub("@\\\\\\[.*\$"; "")
           | .server_port |= (if type=="string" then tonumber else . end)
         else
           .
