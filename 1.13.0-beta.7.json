@@ -1,0 +1,84 @@
+{
+  "log": { "level": "info", "output": "box.log", "timestamp": true },
+  "dns": {
+    "servers": [
+      { "type": "hosts", "tag": "解析HOSTS_469138946ba5fa",
+        "predefined": {
+          "dns.google": [ "8.8.8.8", "8.8.4.4", "2001:4860:4860::8888", "2001:4860:4860::8844" ],
+          "dns.alidns.com": [ "223.5.5.5", "223.6.6.6", "2400:3200::1", "2400:3200:baba::1" ],
+          "one.one.one.one": [ "1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001" ],
+          "1dot1dot1dot1.cloudflare-dns.com": [ "1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001" ],
+          "cloudflare-dns.com": [ "104.16.249.249", "104.16.248.249", "2606:4700::6810:f8f9", "2606:4700::6810:f9f9" ],
+          "dns.cloudflare.com": [ "104.16.132.229", "104.16.133.229", "2606:4700::6810:84e5", "2606:4700::6810:85e5" ],
+          "dot.pub": [ "1.12.12.12", "120.53.53.53" ],
+          "doh.pub": [ "1.12.12.12", "120.53.53.53" ],
+          "dns.quad9.net": [ "9.9.9.9", "149.112.112.112", "2620:fe::fe", "2620:fe::9" ],
+          "dns.yandex.net": [ "77.88.8.8", "77.88.8.1", "2a02:6b8::feed:ff", "2a02:6b8:0:1::feed:ff" ],
+          "dns.sb": [ "185.222.222.222", "2a09::" ],
+          "dns.umbrella.com": [ "208.67.220.220", "208.67.222.222", "2620:119:35::35", "2620:119:53::53" ],
+          "dns.sse.cisco.com": [ "208.67.220.220", "208.67.222.222", "2620:119:35::35", "2620:119:53::53" ],
+          "engage.cloudflareclient.com": [ "162.159.192.1", "2606:4700:d0::a29f:c001" ]
+        }
+      },
+      { "type": "https", "tag": "解析ALIDNS_469138946ba5fa", "domain_resolver": "解析HOSTS_469138946ba5fa", "server": "dns.alidns.com", "path": "/dns-query" },
+      { "type": "https", "tag": "解析CLOUDFLAREDNS_469138946ba5fa", "detour": "代理_469138946ba5fa", "domain_resolver": "解析HOSTS_469138946ba5fa", "server": "cloudflare-dns.com", "path": "/dns-query" },
+      { "type": "udp", "tag": "dns_direct", "server": "223.5.5.5" }
+    ],
+    "rules": [
+      { "rule_set": [ "geosite-category-ads-all", "megamori" ], "action": "predefined", "rcode": "NXDOMAIN" },
+      { "rule_set": "geosite-openai", "server": "解析CLOUDFLAREDNS_469138946ba5fa" },
+      { "rule_set": [ "geosite-private", "geoip-cn" ], "server": "解析ALIDNS_469138946ba5fa" },
+      { "rule_set": "geosite-geolocation-!cn", "server": "解析CLOUDFLAREDNS_469138946ba5fa" }
+    ],
+    "final": "解析ALIDNS_469138946ba5fa",
+    "independent_cache": true
+  },
+  "ntp": { "enabled": true, "interval": "2m0s", "server": "ntp.aliyun.com", "server_port": 123 },
+  "inbounds": [
+    { "type": "mixed", "tag": "混合入站_469138946ba5fa", "listen": "0.0.0.0", "listen_port": 7890 },
+    { "type": "tun", "tag": "TUN入站_469138946ba5fa", "mtu": 1400, "address": [ "172.19.0.1/30", "fdfe:dcba:9876::1/126" ], "auto_route": true, "stack": "gvisor", "sniff": true, "sniff_override_destination": true }
+  ],
+  "outbounds": [
+    { "type": "direct", "tag": "直连_469138946ba5fa" },
+    { "type": "selector", "tag": "代理_469138946ba5fa", "outbounds": ["自动_469138946ba5fa","手动_469138946ba5fa","直连_469138946ba5fa","台湾_469138946ba5fa","新加坡_469138946ba5fa","日本_469138946ba5fa","美国_469138946ba5fa","韩国_469138946ba5fa","香港_469138946ba5fa"] },
+    { "type": "urltest", "tag": "自动_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "selector", "tag": "手动_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"] },
+    { "type": "selector", "tag": "智能_469138946ba5fa", "outbounds": ["自动_469138946ba5fa","手动_469138946ba5fa","直连_469138946ba5fa","台湾_469138946ba5fa","新加坡_469138946ba5fa","日本_469138946ba5fa","美国_469138946ba5fa","韩国_469138946ba5fa","香港_469138946ba5fa"] },
+    { "type": "urltest", "tag": "台湾_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "urltest", "tag": "新加坡_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "urltest", "tag": "日本_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "urltest", "tag": "美国_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "urltest", "tag": "韩国_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 },
+    { "type": "urltest", "tag": "香港_469138946ba5fa", "outbounds": ["直连_469138946ba5fa"], "url": "http://www.gstatic.com/generate_204", "interval": "3m0s", "tolerance": 30 }
+  ],
+  "route": {
+    "rules": [
+      { "protocol": "dns", "port": 53, "action": "hijack-dns" },
+      { "process_name": [ "sing-box.exe", "sing-box", "io.nekohasekai.sfa" ], "outbound": "直连_469138946ba5fa" },
+      { "rule_set": [ "geosite-category-ads-all", "megamori" ], "action": "reject" },
+      { "inbound": "TUN入站_469138946ba5fa", "action": "sniff" },
+      { "ip_is_private": true, "outbound": "直连_469138946ba5fa" },
+      { "rule_set": "geosite-private", "outbound": "直连_469138946ba5fa" },
+      { "rule_set": "geosite-cn", "outbound": "直连_469138946ba5fa" },
+      { "rule_set": "geoip-cn", "outbound": "直连_469138946ba5fa" },
+      { "rule_set": "geosite-openai", "outbound": "智能_469138946ba5fa" },
+      { "rule_set": "geosite-geolocation-!cn", "outbound": "代理_469138946ba5fa" }
+    ],
+    "rule_set": [
+      { "type": "remote", "tag": "geoip-cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-cn.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "geosite-private", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-private.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "geosite-cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "geosite-geolocation-!cn", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "geosite-category-ads-all", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ads-all.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "megamori", "url": "https://gcore.jsdelivr.net/gh/neomikanagi/megamori@main/megamori.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" },
+      { "type": "remote", "tag": "geosite-openai", "url": "https://gcore.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-openai.srs", "download_detour": "直连_469138946ba5fa", "update_interval": "2m0s" }
+    ],
+    "final": "代理_469138946ba5fa",
+    "auto_detect_interface": true,
+    "default_domain_resolver": "解析ALIDNS_469138946ba5fa"
+  },
+  "experimental": {
+    "cache_file": { "enabled": true, "store_fakeip": true, "store_rdrc": true },
+    "clash_api": { "external_controller": ":9999", "external_ui": "ui", "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip", "external_ui_download_detour": "代理_469138946ba5fa" }
+  }
+}
